@@ -18,3 +18,12 @@ export interface ITestCarrera{
     id: number;
     codigo: string;
 }
+
+export interface iAuthState {
+  token: string | null;
+  username: string | null;
+  rol: string | null;
+  isAuthenticated: boolean;
+  login: (token: string, username: string, rol: string) => void;
+  logout: () => void;
+}
