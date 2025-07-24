@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import "./TestCarrera.css";
+import { useState } from "react";
 
 const TestCarrera = () => {
   const [open, setOpen] = useState(false);
@@ -24,10 +23,13 @@ const TestCarrera = () => {
   ];
 
   return (
-    <div className="test-carrera-contenedor">
-      <h1>Tests de Carrera</h1>
-      <button onClick={() => setOpen(true)}>Registrar Test</button>
-
+    <div className="contenedor">
+      <div className="descripcion">
+        <h1>Tests Carreras</h1>
+        <button className="boton-registro" onClick={() => setOpen(true)}>
+          Registrar Test
+        </button>
+      </div>
       <table>
         <thead>
           <tr>
@@ -54,7 +56,7 @@ const TestCarrera = () => {
       </table>
 
       {open && (
-        <div className="modal-overlay">
+        <div className="modal-back">
           <div className="modal-content">
             <h2>Registrar Test de Carrera</h2>
             <button className="modal-close" onClick={() => setOpen(false)}>
@@ -87,7 +89,9 @@ const TestCarrera = () => {
                 <input id="aptitud" type="text" required />
               </label>
 
-              <button type="submit">Guardar</button>
+              <button className="boton-guardar" type="submit">
+                Guardar
+              </button>
             </form>
           </div>
         </div>

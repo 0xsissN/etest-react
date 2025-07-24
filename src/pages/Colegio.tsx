@@ -1,33 +1,35 @@
-import React, { use, useEffect, useState } from "react";
-import "./Colegio.css";
-import api from "../../services/api";
-import type { IColegio } from "../../types/models";
+import { useEffect, useState } from "react";
+import type { IColegio } from "../types/models";
+import api from "../services/api";
 
 const Colegio = () => {
   const [open, setOpen] = useState(false);
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
   const [codigo, setCodigo] = useState("");
-  
-  const [colegios, setColegios] = useState<IColegio[]>([])
+  const [colegios, setColegios] = useState<IColegio[]>([]);
 
   const getColegios = async () => {
-    try{
-        const response = await api.get("/Colegio")
-        setColegios(response.data)
-    }catch(err){
-        console.log("Error: ", err);
+    try {
+      const response = await api.get("/Colegio");
+      setColegios(response.data);
+    } catch (err) {
+      console.log("Error: ", err);
     }
-  }
+  };
 
   useEffect(() => {
-    getColegios()
-  }, [])
+    getColegios();
+  }, []);
 
   return (
-    <div className="colegio-contenedor">
-      <h1>Lista de Colegios</h1>
-      <button onClick={() => setOpen(true)}>Agregar Colegio</button>
+    <div className="contenedor">
+      <div className="descripcion">
+        <h1>Colegios</h1>
+        <button className="boton-registro" onClick={() => setOpen(true)}>
+          Agregar Colegio
+        </button>
+      </div>
 
       <table>
         <thead>
@@ -51,16 +53,13 @@ const Colegio = () => {
       </table>
 
       {open && (
-        <div className="modal-overlay">
+        <div className="modal-back">
           <div className="modal-content">
             <h2>Formulario de Colegio</h2>
-            <button 
-              className="modal-close" 
-              onClick={() => setOpen(false)}
-            >
+            <button className="modal-close" onClick={() => setOpen(false)}>
               &times;
             </button>
-            
+
             <form>
               <label htmlFor="nombre">
                 Nombre:
@@ -72,7 +71,7 @@ const Colegio = () => {
                   required
                 />
               </label>
-              
+
               <label htmlFor="direccion">
                 Dirección:
                 <input
@@ -83,7 +82,7 @@ const Colegio = () => {
                   required
                 />
               </label>
-              
+
               <label htmlFor="codigo">
                 Código:
                 <input
@@ -94,8 +93,10 @@ const Colegio = () => {
                   required
                 />
               </label>
-              
-              <button type="submit">Guardar</button>
+
+              <button className="boton-guardar" type="submit">
+                Guardar
+              </button>
             </form>
           </div>
         </div>

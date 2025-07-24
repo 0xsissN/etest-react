@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import "./Estudiante.css";
-import type { IEstudiante } from "../../types/models";
-import api from "../../services/api";
+import { useEffect, useState } from "react";
+import type { IEstudiante } from "../types/models";
+import api from "../services/api";
 
 const Estudiante = () => {
   const [open, setOpen] = useState(false);
@@ -22,14 +21,17 @@ const Estudiante = () => {
   };
 
   useEffect(() => {
-    getEstudiantes()
-  }, [])
+    getEstudiantes();
+  }, []);
 
   return (
-    <div className="estudiante-contenedor">
-      <h1>Lista de Estudiantes</h1>
-      <button onClick={() => setOpen(true)}>Agregar Estudiante</button>
-
+    <div className="contenedor">
+      <div className="descripcion">
+        <h1>Estudiantes</h1>
+        <button className="boton-registro" onClick={() => setOpen(true)}>
+          Agregar Estudiante
+        </button>
+      </div>
       <table>
         <thead>
           <tr>
@@ -54,13 +56,12 @@ const Estudiante = () => {
       </table>
 
       {open && (
-        <div className="modal-overlay">
+        <div className="modal-back">
           <div className="modal-content">
             <h2>Formulario de Estudiante</h2>
-            <button
-              className="modal-close"
-              onClick={() => setOpen(false)}
-            ></button>
+            <button className="modal-close" onClick={() => setOpen(false)}>
+              &times;
+            </button>
 
             <form>
               <label htmlFor="ci">
@@ -116,7 +117,9 @@ const Estudiante = () => {
                 />
               </label>
 
-              <button type="submit">Guardar</button>
+              <button className="boton-guardar" type="submit">
+                Guardar
+              </button>
             </form>
           </div>
         </div>

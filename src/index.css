@@ -7,3 +7,118 @@ a{
     text-decoration: none;
     color: inherit;
 }
+
+.navbar{
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+}
+
+.navbar ul{
+    padding: 10px 30px;
+    border-radius: 30px;
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 1);
+}
+
+.navbar ul li {
+    display: inline-block;
+    padding: 5px 10px;
+    color: #000;
+}
+
+.contenedor{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.contenedor form {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    gap: 10px;
+}
+
+.descripcion{
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+table {
+  width: 90%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.boton-registro{
+  margin: 14px;
+  padding: 9px;
+  background-color: #000;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.boton-guardar{
+  padding: 9px;
+  background-color: #000;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-back {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
