@@ -6,18 +6,18 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    try{
-        await Auth(username, password)
-        window.location.href = "/Estudiante"
-    }catch(err){
-        console.log("error", err);
+    try {
+      await Auth(username, password);
+      window.location.href = "/estudiante";
+    } catch (err) {
+      console.log("error", err);
     }
   };
 
   return (
     <div className="contenedor">
       <h1>Login</h1>
-      <div className="form">
+      <form action={handleLogin}>
         <label htmlFor="username">
           Usuario:
           <input
@@ -38,10 +38,10 @@ const Login = () => {
             required
           />
         </label>
-        <button className="boton-registro" onClick={handleLogin}>
+        <button className="boton-guardar" onClick={handleLogin}>
           Iniciar sesión
         </button>
-      </div>
+      </form>
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import type { IEstudiante } from "../types/models";
-import api from "../services/api";
+import { useAuthStore } from "../store/useAuthStore";
+import { Navigate, useNavigate } from "react-router-dom";
+import { getEstudiante } from "../services/estudianteService";
 
 const Estudiante = () => {
   const [open, setOpen] = useState(false);
@@ -10,10 +12,17 @@ const Estudiante = () => {
   const [apellidoMaterno, setApellidoMaterno] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
+  const navigate = useNavigate();
 
-  const getEstudiantes = async () => {
+  const { isAuthenticated, logout } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
+
+  const loadData = async () => {
     try {
-      const response = await api.get("/Estudiante");
+      const response = await getEstudiante();
       setEstudiantes(response.data);
     } catch (err) {
       console.log("Error: ", err);
@@ -21,9 +30,13 @@ const Estudiante = () => {
   };
 
   useEffect(() => {
-    getEstudiantes();
+    loadData();
   }, []);
-
+  
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
   return (
     <div className="contenedor">
       <div className="descripcion">
@@ -31,10 +44,14 @@ const Estudiante = () => {
         <button className="boton-registro" onClick={() => setOpen(true)}>
           Agregar Estudiante
         </button>
+        <button className="boton-registro" onClick={handleLogout}>
+          Cerrar Sesion
+        </button>
       </div>
       <table>
         <thead>
           <tr>
+            <th>ID</th>
             <th>CI</th>
             <th>Nombre</th>
             <th>Apellido Paterno</th>
@@ -43,8 +60,9 @@ const Estudiante = () => {
           </tr>
         </thead>
         <tbody>
-          {estudiantes.map((estudiante, index) => (
-            <tr key={index}>
+          {estudiantes.map((estudiante) => (
+            <tr key={estudiante.id}>
+              <td>{estudiante.id}</td>
               <td>{estudiante.ci}</td>
               <td>{estudiante.nombre}</td>
               <td>{estudiante.apellido_Paterno}</td>

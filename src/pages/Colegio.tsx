@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import type { IColegio } from "../types/models";
-import api from "../services/api";
+import { useAuthStore } from "../store/useAuthStore";
+import { Navigate, useNavigate } from "react-router-dom";
+import { getColegio, postColegio } from "../services/colegioService";
 
 const Colegio = () => {
   const [open, setOpen] = useState(false);
@@ -8,19 +10,39 @@ const Colegio = () => {
   const [direccion, setDireccion] = useState("");
   const [codigo, setCodigo] = useState("");
   const [colegios, setColegios] = useState<IColegio[]>([]);
+  const navigate = useNavigate();
 
-  const getColegios = async () => {
+  const { isAuthenticated, logout } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
+
+  const loadData = async () => {
     try {
-      const response = await api.get("/Colegio");
+      const response = await getColegio();
       setColegios(response.data);
     } catch (err) {
       console.log("Error: ", err);
     }
   };
 
+  const handlePostColegio = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await postColegio({ codigo, nombre, direccion });
+    setCodigo("");
+    setNombre("");
+    setDireccion("");
+  };
+
   useEffect(() => {
-    getColegios();
+    loadData();
   }, []);
+  
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <div className="contenedor">
@@ -28,6 +50,9 @@ const Colegio = () => {
         <h1>Colegios</h1>
         <button className="boton-registro" onClick={() => setOpen(true)}>
           Agregar Colegio
+        </button>
+        <button className="boton-registro" onClick={handleLogout}>
+          Cerrar Sesion
         </button>
       </div>
 
@@ -60,7 +85,7 @@ const Colegio = () => {
               &times;
             </button>
 
-            <form>
+            <form onSubmit={handlePostColegio}>
               <label htmlFor="nombre">
                 Nombre:
                 <input

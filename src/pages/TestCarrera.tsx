@@ -1,7 +1,20 @@
 import { useState } from "react";
+import { useAuthStore } from "../store/useAuthStore";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const TestCarrera = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   const data = [
     {
@@ -28,6 +41,9 @@ const TestCarrera = () => {
         <h1>Tests Carreras</h1>
         <button className="boton-registro" onClick={() => setOpen(true)}>
           Registrar Test
+        </button>
+        <button className="boton-registro" onClick={handleLogout}>
+          Cerrar Sesion
         </button>
       </div>
       <table>
