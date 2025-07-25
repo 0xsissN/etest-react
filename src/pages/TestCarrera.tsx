@@ -7,6 +7,7 @@ import type {
   IColegio,
   ICurso,
   IEstudiante,
+  ISeleccion,
   ITest,
 } from "../types/models";
 import { getAptitud, getAptitudByID } from "../services/aptitudService";
@@ -14,8 +15,14 @@ import { getCarreraByAptitud } from "../services/carreraService";
 import { getEstudiante } from "../services/estudianteService";
 import { getColegio } from "../services/colegioService";
 import { getCurso } from "../services/cursoService";
-import { deleteTest, getTest, postTest } from "../services/testService";
 import {
+  deleteTest,
+  getTest,
+  postTest,
+  putTest,
+} from "../services/testService";
+import {
+  deleteTestCarrera,
   getCarreraByID,
   postTestCarrera,
 } from "../services/testCarreraService";
@@ -36,6 +43,11 @@ const TestCarrera = () => {
   const [tests, setTests] = useState<ITest[]>([]);
   const [codigo, setCodigo] = useState("");
   const [test, setTest] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
+  const [testID, setTestID] = useState<ITest | null>(null);
+  const [estado, setEstado] = useState(false);
+  const [selCarrera, setSelCarrera] = useState<ISeleccion[]>([]);
+  const [selAptitud, setSelAptitud] = useState<ISeleccion[]>([]);
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
@@ -111,6 +123,52 @@ const TestCarrera = () => {
       await postTestCarrera(test, carrera_id);
     } catch (err) {
       console.error("Error:", err);
+    }
+  };
+
+  const handleDeleteTestCarrera = async (
+    test_id: number,
+    carrera_id: number
+  ) => {
+    try {
+      await deleteTestCarrera(test_id, carrera_id);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const openEditModal = (test: ITest) => {
+    setTestID(test);
+    setCodigo(test.codigo);
+    setEstudiante(test.ci);
+    setColegio(test.codigoColegio);
+    setCurso(test.cursoId.toString());
+    setEstado(test.estado);
+    setSelCarrera(test.carreras);
+    setSelAptitud(test.aptitudes);
+    setEditOpen(true);
+  };
+
+  const handlePutTest = async (
+    t_codigo: string,
+    t_estudiante_ci: string,
+    t_colegio_codigo: string,
+    t_curso_id: string,
+    t_estado: boolean
+  ) => {
+    try {
+      await putTest(
+        t_codigo,
+        t_estudiante_ci,
+        t_colegio_codigo,
+        t_curso_id,
+        t_estado
+      );
+
+      loadTests();
+      setEditOpen(false);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -227,7 +285,12 @@ const TestCarrera = () => {
                 </button>
               </td>
               <td>
-                <button className="boton-actualizado">Editar</button>
+                <button
+                  className="boton-actualizado"
+                  onClick={() => openEditModal(test)}
+                >
+                  Editar
+                </button>
               </td>
             </tr>
           ))}
@@ -353,6 +416,150 @@ const TestCarrera = () => {
 
               <button className="boton-guardar" type="submit">
                 Guardar
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+      {editOpen && testID && (
+        <div className="modal-back">
+          <div className="modal-content-t">
+            <h1>Editar Test de Carrera</h1>
+            <button
+              className="modal-close"
+              onClick={() => {
+                setEditOpen(false);
+                setCodigo("");
+                setEstudiante("");
+                setColegio("");
+                setCurso("");
+                setSelCarrera([]);
+                setSelAptitud([]);
+              }}
+            >
+              &times;
+            </button>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handlePutTest(
+                  testID.codigo,
+                  estudiante,
+                  colegio,
+                  curso,
+                  estado
+                );
+              }}
+            >
+              <label htmlFor="edit-codigo">
+                Código:
+                <input
+                  id="edit-codigo"
+                  type="text"
+                  value={testID.codigo}
+                  onChange={(e) => setCodigo(e.target.value)}
+                  required
+                  disabled
+                />
+              </label>
+
+              <label htmlFor="edit-estudiante">
+                Estudiante:
+                <select
+                  value={estudiante}
+                  onChange={(e) => setEstudiante(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccionar estudiante</option>
+                  {estudiantes.map((est) => (
+                    <option key={est.ci} value={est.ci}>
+                      {est.nombre} {est.apellido_Paterno} (CI: {est.ci})
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label htmlFor="edit-colegio">
+                Colegio:
+                <select
+                  value={colegio}
+                  onChange={(e) => setColegio(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccionar colegio</option>
+                  {colegios.map((col) => (
+                    <option key={col.codigo} value={col.codigo}>
+                      {col.nombre} (Código: {col.codigo})
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label htmlFor="edit-curso">
+                Curso:
+                <select
+                  value={curso}
+                  onChange={(e) => setCurso(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccionar curso</option>
+                  {cursos.map((c) => (
+                    <option key={c.id} value={c.id.toString()}>
+                      {c.nombre}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label htmlFor="edit-estado">
+                Estado:
+                <select
+                  value={estado ? "1" : "0"}
+                  onChange={(e) => setEstado(e.target.value === "1")}
+                >
+                  <option value="1">Activo</option>
+                  <option value="0">Inactivo</option>
+                </select>
+              </label>
+
+              <div className="a-c-contenedor">
+                <div className="a-box">
+                  <h2>Aptitudes</h2>
+                  <div className="a-lista">
+                    {selAptitud.map((aptitud) => (
+                      <div
+                        key={aptitud.id}
+                        className="a-item"
+                        onClick={() => toggleAptitudSeleccion(aptitud.id)}
+                      >
+                        {aptitud.carreras}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="a-box">
+                  <h2>Carreras</h2>
+                  <div className="a-lista">
+                    {selCarrera.map((carrera) => (
+                      <div key={carrera.id} className="a-item">
+                        {carrera.carreras}
+                        <button
+                          className="boton-eliminar"
+                          onClick={() =>
+                            handleDeleteTestCarrera(testID.id, carrera.id)
+                          }
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <button className="boton-guardar" type="submit">
+                Guardar Cambios
               </button>
             </form>
           </div>

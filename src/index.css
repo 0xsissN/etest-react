@@ -71,7 +71,7 @@ th {
   cursor: pointer;
 }
 
-.boton-actualizado{
+.boton-actualizado {
   background-color: #000;
   color: white;
   padding: 5px;
@@ -207,4 +207,12 @@ select {
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
+}
+
+.boton-eliminar {
+  background-color: #000;
+  color: white;
+  margin: 10px;
+  padding: 5px;
+  border-radius: 5px;
 }

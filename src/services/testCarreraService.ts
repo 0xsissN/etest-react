@@ -14,3 +14,13 @@ export const postTestCarrera = async (
   );
   return response;
 };
+
+export const deleteTestCarrera = async (
+  test_id: number,
+  carrera_id: number
+) => {
+  const response = await api.delete(
+    `/TestCarrera?test_id=${test_id}&carrera_id=${carrera_id}`
+  );
+  return response;
+};

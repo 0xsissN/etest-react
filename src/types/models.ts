@@ -53,6 +53,9 @@ export interface ISeleccion {
 export interface ITest {
   id: number;
   codigo: string;
+  ci: string;
+  codigoColegio: string;
+  cursoId: string;
   nombre_Estudiante: string;
   colegio: string;
   curso: string;
