@@ -7,7 +7,7 @@ export const getCarreraByID = async (id: number) => {
 
 export const postTestCarrera = async (
   test_codigo: string,
-  carrera_id: string
+  carrera_id: number
 ) => {
   const response = await api.post(
     `/TestCarrera?test_codigo=${test_codigo}&carrera_id=${carrera_id}`

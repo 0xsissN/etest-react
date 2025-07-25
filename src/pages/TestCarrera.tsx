@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Navigate, useAsyncError, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import type {
   IAptitud,
   ICarrera,
@@ -15,7 +15,10 @@ import { getEstudiante } from "../services/estudianteService";
 import { getColegio } from "../services/colegioService";
 import { getCurso } from "../services/cursoService";
 import { deleteTest, getTest, postTest } from "../services/testService";
-import { getCarreraByID, postTestCarrera } from "../services/testCarreraService";
+import {
+  getCarreraByID,
+  postTestCarrera,
+} from "../services/testCarreraService";
 
 const TestCarrera = () => {
   const [open, setOpen] = useState(false);
@@ -32,6 +35,7 @@ const TestCarrera = () => {
   const [curso, setCurso] = useState("");
   const [tests, setTests] = useState<ITest[]>([]);
   const [codigo, setCodigo] = useState("");
+  const [test, setTest] = useState("");
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
@@ -102,17 +106,24 @@ const TestCarrera = () => {
     }
   };
 
-  const handlePostCarrera = async (codigo_test: string, carrera_id: string) => {
+  const handlePostCarrera = async (carrera_id: number) => {
     try {
-      await postTestCarrera(codigo_test, carrera_id);
+      await postTestCarrera(test, carrera_id);
     } catch (err) {
       console.error("Error:", err);
     }
-  }
+  };
+
+  const handleMultiplesCarreras = () => {
+    carreras.map((e) => handlePostCarrera(e.id));
+    loadTests();
+    setTest("");
+  };
 
   const handleDeleteTest = async (t_codigo: string) => {
     try {
       await deleteTest(t_codigo);
+      loadTests();
     } catch (err) {
       console.error("Error:", err);
     }
@@ -226,7 +237,7 @@ const TestCarrera = () => {
       {open && (
         <div className="modal-back">
           <div className="modal-content-t">
-            <h2>Registrar Test de Carrera</h2>
+            <h1>Registrar Test de Carrera</h1>
             <button className="modal-close" onClick={() => setOpen(false)}>
               &times;
             </button>
@@ -291,12 +302,26 @@ const TestCarrera = () => {
                 </select>
               </label>
 
-              <button>
+              <button className="boton-guardar" type="submit">
                 Guardar Test
               </button>
-
-              <label htmlFor="">
-                
+            </form>
+            <form onSubmit={handleMultiplesCarreras}>
+              <label htmlFor="test">
+                Test:
+                <select
+                  value={test}
+                  onChange={(e) => setTest(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccionar test</option>
+                  {tests.map((c) => (
+                    <option key={c.id} value={c.codigo}>
+                      Test id: {c.id}, Codigo: {c.codigo}, Nombre:{" "}
+                      {c.nombre_Estudiante}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <div className="a-c-contenedor">
