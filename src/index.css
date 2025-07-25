@@ -71,6 +71,14 @@ th {
   cursor: pointer;
 }
 
+.boton-actualizado{
+  background-color: #000;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .boton-guardar {
   padding: 9px;
   background-color: #000;

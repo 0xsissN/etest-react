@@ -1,22 +1,24 @@
-export interface IColegio{
-    id: number;
-    codigo: string;
-    nombre: string;
-    direccion: string;
+export interface IColegio {
+  id: number;
+  codigo: string;
+  nombre: string;
+  direccion: string;
+  estado: boolean;
 }
 
-export interface IEstudiante{
-    id: number;
-    ci: string;
-    nombre: string;
-    apellido_Paterno: string;
-    apellido_Materno: string;
-    fecha_Nacimiento: Date;
+export interface IEstudiante {
+  id: number;
+  ci: string;
+  nombre: string;
+  apellido_Paterno: string;
+  apellido_Materno: string;
+  fecha_Nacimiento: string;
+  estado: boolean;
 }
 
-export interface ITestCarrera{
-    id: number;
-    codigo: string;
+export interface ITestCarrera {
+  id: number;
+  codigo: string;
 }
 
 export interface iAuthState {
@@ -29,16 +31,16 @@ export interface iAuthState {
 }
 
 export interface IAptitud {
-    id: number,
-    nombre: string
+  id: number;
+  nombre: string;
 }
 
 export interface ICarrera {
-    id: number,
-    nombre: string
+  id: number;
+  nombre: string;
 }
 
-export interface ICurso{
-    id: number,
-    nombre: string
+export interface ICurso {
+  id: number;
+  nombre: string;
 }
