@@ -1,39 +1,117 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useAsyncError, useNavigate } from "react-router-dom";
+import type {
+  IAptitud,
+  ICarrera,
+  IColegio,
+  ICurso,
+  IEstudiante,
+} from "../types/models";
+import { getAptitud } from "../services/aptitudService";
+import { getCarreraByAptitud } from "../services/carreraService";
+import { getEstudiante } from "../services/estudianteService";
+import { getColegio } from "../services/colegioService";
+import { getCurso } from "../services/cursoService";
 
 const TestCarrera = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuthStore();
+  const [aptitudes, setAptitudes] = useState<IAptitud[]>([]);
+  const [seleccionAptitudes, setSeleccionAptitudes] = useState<number[]>([]);
+  const [carreras, setCarreras] = useState<ICarrera[]>([]);
+  const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
+  const [colegios, setColegios] = useState<IColegio[]>([]);
+  const [cursos, setCursos] = useState<ICurso[]>([]);
+  const [estudiante, setEstudiante] = useState("");
+  const [colegio, setColegio] = useState("");
+  const [curso, setCurso] = useState("");
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
+
+  const loadAptitudes = async () => {
+    try {
+      const response = await getAptitud();
+      setAptitudes(response.data);
+    } catch (err) {
+      console.error("Error cargando aptitudes:", err);
+    }
+  };
+
+  const loadEstudiantes = async () => {
+    try {
+      const response = await getEstudiante();
+      setEstudiantes(response.data);
+    } catch (err) {
+      console.error("Error cargando estudiantes:", err);
+    }
+  };
+
+  const loadColegios = async () => {
+    try {
+      const response = await getColegio();
+      setColegios(response.data);
+    } catch (err) {
+      console.error("Error cargando colegios:", err);
+    }
+  };
+
+  const loadCursos = async () => {
+    try {
+      const response = await getCurso();
+      setCursos(response.data);
+    } catch (err) {
+      console.error("Error cargando cursos:", err);
+    }
+  };
+
+  const toggleAptitudSeleccion = (aptitudId: number) => {
+    setSeleccionAptitudes((prev) =>
+      prev.includes(aptitudId)
+        ? prev.filter((id) => id !== aptitudId)
+        : [...prev, aptitudId]
+    );
+  };
+
+  useEffect(() => {
+    const getCarreras = async () => {
+      if (seleccionAptitudes.length === 0) {
+        setCarreras([]);
+        return;
+      }
+
+      try {
+        const p_aptitudes = seleccionAptitudes.map((aptitudId) =>
+          getCarreraByAptitud(aptitudId)
+        );
+
+        const response = await Promise.all(p_aptitudes);
+        const listCarreras = response.flatMap((res) => res.data);
+
+        setCarreras(listCarreras);
+      } catch (err) {
+        console.error("Error:", err);
+        setCarreras([]);
+      }
+    };
+
+    getCarreras();
+  }, [seleccionAptitudes]);
 
   const handleLogout = () => {
     logout();
     navigate("/");
   };
 
-  const data = [
-    {
-      id: 1,
-      nombre: "nombre",
-      colegio: "colegio",
-      curso: "curso",
-      carrera: "carrera",
-      aptitud: "aptitud",
-    },
-    {
-      id: 2,
-      nombre: "nombre",
-      colegio: "colegio",
-      curso: "curso",
-      carrera: "carrera",
-      aptitud: "aptitud",
-    },
-  ];
+  useEffect(() => {
+    loadAptitudes();
+    loadEstudiantes();
+    loadColegios();
+    loadCursos();
+  }, []);
 
   return (
     <div className="contenedor">
@@ -43,7 +121,7 @@ const TestCarrera = () => {
           Registrar Test
         </button>
         <button className="boton-registro" onClick={handleLogout}>
-          Cerrar Sesion
+          Cerrar Sesión
         </button>
       </div>
       <table>
@@ -57,23 +135,12 @@ const TestCarrera = () => {
             <th>Aptitudes</th>
           </tr>
         </thead>
-        <tbody>
-          {data.map((test) => (
-            <tr key={test.id}>
-              <td>{test.id}</td>
-              <td>{test.nombre}</td>
-              <td>{test.colegio}</td>
-              <td>{test.curso}</td>
-              <td>{test.carrera}</td>
-              <td>{test.aptitud}</td>
-            </tr>
-          ))}
-        </tbody>
+        <tbody></tbody>
       </table>
 
       {open && (
         <div className="modal-back">
-          <div className="modal-content">
+          <div className="modal-content-t">
             <h2>Registrar Test de Carrera</h2>
             <button className="modal-close" onClick={() => setOpen(false)}>
               &times;
@@ -81,29 +148,79 @@ const TestCarrera = () => {
 
             <form>
               <label htmlFor="nombre">
-                Nombre:
-                <input id="nombre" type="text" required />
+                Estudiante:
+                <select
+                  value={estudiante}
+                  onChange={(e) => setEstudiante(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccionar estudiante</option>
+                  {estudiantes.map((est) => (
+                    <option key={est.id} value={est.nombre}>
+                      {est.nombre} {est.apellido_Paterno}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label htmlFor="colegio">
                 Colegio:
-                <input id="colegio" type="text" required />
+                <select
+                  value={colegio}
+                  onChange={(e) => setColegio(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccionar colegio</option>
+                  {colegios.map((col) => (
+                    <option key={col.id} value={col.nombre}>
+                      {col.nombre}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label htmlFor="curso">
                 Curso:
-                <input id="curso" type="text" required />
+                <select
+                  value={curso}
+                  onChange={(e) => setCurso(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccionar curso</option>
+                  {cursos.map((c) => (
+                    <option key={c.id} value={c.nombre}>
+                      {c.nombre}
+                    </option>
+                  ))}
+                </select>
               </label>
 
-              <label htmlFor="carrera">
-                Carrera:
-                <input id="carrera" type="text" required />
-              </label>
-
-              <label htmlFor="aptitud">
-                Aptitud:
-                <input id="aptitud" type="text" required />
-              </label>
+              <div className="a-c-contenedor">
+                <div className="a-box">
+                  <h2>Aptitudes</h2>
+                  <div className="a-lista">
+                    {aptitudes.map((aptitud) => (
+                      <div
+                        key={aptitud.id}
+                        className="a-item"
+                        onClick={() => toggleAptitudSeleccion(aptitud.id)}
+                      >
+                        {aptitud.nombre}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="a-box">
+                  <h2>Carreras</h2>
+                  <div className="a-lista">
+                    {carreras.map((carrera) => (
+                      <div key={carrera.id} className="a-item">
+                        {carrera.nombre}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
               <button className="boton-guardar" type="submit">
                 Guardar

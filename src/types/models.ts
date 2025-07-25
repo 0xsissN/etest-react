@@ -27,3 +27,18 @@ export interface iAuthState {
   login: (token: string, username: string, rol: string) => void;
   logout: () => void;
 }
+
+export interface IAptitud {
+    id: number,
+    nombre: string
+}
+
+export interface ICarrera {
+    id: number,
+    nombre: string
+}
+
+export interface ICurso{
+    id: number,
+    nombre: string
+}
