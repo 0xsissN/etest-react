@@ -7,12 +7,15 @@ import type {
   IColegio,
   ICurso,
   IEstudiante,
+  ITest,
 } from "../types/models";
-import { getAptitud } from "../services/aptitudService";
+import { getAptitud, getAptitudByID } from "../services/aptitudService";
 import { getCarreraByAptitud } from "../services/carreraService";
 import { getEstudiante } from "../services/estudianteService";
 import { getColegio } from "../services/colegioService";
 import { getCurso } from "../services/cursoService";
+import { deleteTest, getTest, postTest } from "../services/testService";
+import { getCarreraByID, postTestCarrera } from "../services/testCarreraService";
 
 const TestCarrera = () => {
   const [open, setOpen] = useState(false);
@@ -27,6 +30,8 @@ const TestCarrera = () => {
   const [estudiante, setEstudiante] = useState("");
   const [colegio, setColegio] = useState("");
   const [curso, setCurso] = useState("");
+  const [tests, setTests] = useState<ITest[]>([]);
+  const [codigo, setCodigo] = useState("");
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
@@ -65,6 +70,51 @@ const TestCarrera = () => {
       setCursos(response.data);
     } catch (err) {
       console.error("Error cargando cursos:", err);
+    }
+  };
+
+  const loadTests = async () => {
+    try {
+      const response = await getTest();
+      const testsAptCar = await Promise.all(
+        response.data.map(async (test: ITest) => {
+          const aptitudes = await getAptitudByID(test.id);
+          const carreras = await getCarreraByID(test.id);
+
+          return {
+            ...test,
+            aptitudes: aptitudes.data,
+            carreras: carreras.data,
+          };
+        })
+      );
+      setTests(testsAptCar);
+    } catch (err) {
+      console.error("Error cargando tests:", err);
+    }
+  };
+
+  const handlePostTest = async () => {
+    try {
+      await postTest(codigo, estudiante, colegio, curso);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
+  const handlePostCarrera = async (codigo_test: string, carrera_id: string) => {
+    try {
+      await postTestCarrera(codigo_test, carrera_id);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  }
+
+  const handleDeleteTest = async (t_codigo: string) => {
+    try {
+      await deleteTest(t_codigo);
+    } catch (err) {
+      console.error("Error:", err);
     }
   };
 
@@ -111,6 +161,7 @@ const TestCarrera = () => {
     loadEstudiantes();
     loadColegios();
     loadCursos();
+    loadTests();
   }, []);
 
   return (
@@ -128,14 +179,48 @@ const TestCarrera = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Nombre</th>
+            <th>Codigo</th>
+            <th>Nombre Estudiante</th>
             <th>Colegio</th>
             <th>Curso</th>
-            <th>Carreras</th>
+            <th>Estado</th>
             <th>Aptitudes</th>
+            <th>Carreras</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          {tests.map((test) => (
+            <tr key={test.id}>
+              <td>{test.id}</td>
+              <td>{test.codigo}</td>
+              <td>{test.nombre_Estudiante}</td>
+              <td>{test.colegio}</td>
+              <td>{test.curso}</td>
+              <td>{test.estado ? "Activo" : "Desactivado"}</td>
+              <td>
+                {test.aptitudes?.map((aptitud) => (
+                  <div key={aptitud.id}>{aptitud.carreras}</div>
+                ))}
+              </td>
+              <td>
+                {test.carreras?.map((carrera) => (
+                  <div key={carrera.id}>{carrera.carreras}</div>
+                ))}
+              </td>
+              <td>
+                <button
+                  className="boton-actualizado"
+                  onClick={() => handleDeleteTest(test.codigo)}
+                >
+                  Eliminar
+                </button>
+              </td>
+              <td>
+                <button className="boton-actualizado">Editar</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
 
       {open && (
@@ -146,8 +231,19 @@ const TestCarrera = () => {
               &times;
             </button>
 
-            <form>
-              <label htmlFor="nombre">
+            <form onSubmit={handlePostTest}>
+              <label htmlFor="codigo">
+                Código:
+                <input
+                  id="codigo"
+                  type="text"
+                  value={codigo}
+                  onChange={(e) => setCodigo(e.target.value)}
+                  required
+                />
+              </label>
+
+              <label htmlFor="estudiante">
                 Estudiante:
                 <select
                   value={estudiante}
@@ -156,8 +252,8 @@ const TestCarrera = () => {
                 >
                   <option value="">Seleccionar estudiante</option>
                   {estudiantes.map((est) => (
-                    <option key={est.id} value={est.nombre}>
-                      {est.nombre} {est.apellido_Paterno}
+                    <option key={est.ci} value={est.ci}>
+                      {est.nombre} {est.apellido_Paterno} (CI: {est.ci})
                     </option>
                   ))}
                 </select>
@@ -172,8 +268,8 @@ const TestCarrera = () => {
                 >
                   <option value="">Seleccionar colegio</option>
                   {colegios.map((col) => (
-                    <option key={col.id} value={col.nombre}>
-                      {col.nombre}
+                    <option key={col.codigo} value={col.codigo}>
+                      {col.nombre} (Código: {col.codigo})
                     </option>
                   ))}
                 </select>
@@ -188,11 +284,19 @@ const TestCarrera = () => {
                 >
                   <option value="">Seleccionar curso</option>
                   {cursos.map((c) => (
-                    <option key={c.id} value={c.nombre}>
+                    <option key={c.id} value={c.id.toString()}>
                       {c.nombre}
                     </option>
                   ))}
                 </select>
+              </label>
+
+              <button>
+                Guardar Test
+              </button>
+
+              <label htmlFor="">
+                
               </label>
 
               <div className="a-c-contenedor">

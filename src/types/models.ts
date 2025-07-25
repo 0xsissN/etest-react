@@ -44,3 +44,19 @@ export interface ICurso {
   id: number;
   nombre: string;
 }
+
+export interface ISeleccion {
+  id: number;
+  carreras: string;
+}
+
+export interface ITest {
+  id: number;
+  codigo: string;
+  nombre_Estudiante: string;
+  colegio: string;
+  curso: string;
+  estado: boolean;
+  aptitudes: ISeleccion[];
+  carreras: ISeleccion[];
+}
