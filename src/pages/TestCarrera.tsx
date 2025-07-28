@@ -36,6 +36,7 @@ const TestCarrera = () => {
   const { isAuthenticated, logout } = useAuthStore();
   const [aptitudes, setAptitudes] = useState<IAptitud[]>([]);
   const [seleccionAptitudes, setSeleccionAptitudes] = useState<number[]>([]);
+
   const [carreras, setCarreras] = useState<ICarrera[]>([]);
   const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
   const [colegios, setColegios] = useState<IColegio[]>([]);
@@ -148,9 +149,9 @@ const TestCarrera = () => {
   const openEditModal = (test: ITest) => {
     setTestID(test);
     setCodigo(test.codigo);
-    setEstudiante(test.ci);
-    setColegio(test.codigoColegio);
-    setCurso(test.cursoId.toString());
+    setEstudiante(test.estudianteCI);
+    setColegio(test.colegioCodigo);
+    setCurso(test.cursoID.toString());
     setEstado(test.estado);
     setSelCarrera(test.carreras);
     setSelAptitud(test.aptitudes);
@@ -270,7 +271,7 @@ const TestCarrera = () => {
             <tr key={test.id}>
               <td>{test.id}</td>
               <td>{test.codigo}</td>
-              <td>{test.nombre_Estudiante}</td>
+              <td>{test.nombreEstudiante}</td>
               <td>{test.colegio}</td>
               <td>{test.curso}</td>
               <td>{test.estado ? "Activo" : "Desactivado"}</td>
@@ -372,7 +373,7 @@ const TestCarrera = () => {
                   {tests.map((c) => (
                     <option key={c.id} value={c.codigo}>
                       Test id: {c.id}, Codigo: {c.codigo}, Nombre:{" "}
-                      {c.nombre_Estudiante}
+                      {c.nombreEstudiante}
                     </option>
                   ))}
                 </select>

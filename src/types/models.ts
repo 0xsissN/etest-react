@@ -16,38 +16,35 @@ export interface IEstudiante {
   estado: boolean | string;
 }
 
-export interface ITesti {
-  id:number;
-  codigo: string;
-  estudiante_ci: string;
-  colegio_codigo: string;
-  curso_id: number;
-  usuario_id: number;
-  estado: boolean | string;
+export interface IUsuario {
+  username: string;
+  password: string;
 }
 
-export interface ITestCarrera {
+export interface IPTestCarrera {
+  test_codigo: string;
+  carrera_id: number;
+}
 
+export interface IDTestCarrera {
+  test_id: number;
+  carrera_id: number;
 }
 
 export interface ITest {
   id: number;
   codigo: string;
-  ci: string;
-  codigoColegio: string;
-  cursoId: string;
-  nombre_Estudiante: string;
+  estudianteCI: string;
+  colegioCodigo: string;
+  cursoID: string;
+  nombreEstudiante: string;
   colegio: string;
   curso: string;
-  estado: boolean;
+  estado: boolean | string;
   aptitudes: ISeleccion[];
   carreras: ISeleccion[];
 }
 
-export interface IUsuario {
-  username: string
-  password: string
-} 
 export interface ITestCarrera {
   id: number;
   codigo: string;

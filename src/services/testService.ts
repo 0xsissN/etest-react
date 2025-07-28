@@ -3,7 +3,7 @@ import api from "./api";
 
 export const getTest = async () => await api.get<ITest[]>("/Test");
 
-export const postTest = async (test: ITesti) => {
+export const postTest = async (test: ITest) => {
   const response = await api.post(
     `/Test?codigo=${test.codigo}&estudiante_ci=${test.estudiante_ci}&colegio_codigo=${test.colegio_codigo}&curso_id=${test.curso_id}&usuario_id=1`
   );
