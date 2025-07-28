@@ -1,13 +1,13 @@
-import { useState } from "react";
 import Auth from "../services/authService";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type { ILogin } from "../types/models";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const { register, handleSubmit } = useForm<ILogin>();
 
-  const handleLogin = async () => {
+  const onLogin: SubmitHandler<ILogin> = async (data) => {
     try {
-      await Auth(username, password);
+      await Auth(data.username, data.password);
       window.location.href = "/estudiante";
     } catch (err) {
       console.log("error", err);
@@ -17,28 +17,16 @@ const Login = () => {
   return (
     <div className="contenedor">
       <h1>Login</h1>
-      <form action={handleLogin}>
+      <form onSubmit={handleSubmit(onLogin)}>
         <label htmlFor="username">
           Usuario:
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+          <input {...register("username")} />
         </label>
         <label htmlFor="password">
           Password:
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <input {...register("password")} type="password"/>
         </label>
-        <button className="boton-guardar" onClick={handleLogin}>
+        <button className="boton-guardar" type="submit">
           Iniciar sesión
         </button>
       </form>

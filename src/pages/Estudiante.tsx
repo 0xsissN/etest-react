@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import type { IEstudiante } from "../types/models";
 import { useAuthStore } from "../store/useAuthStore";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
@@ -8,18 +7,18 @@ import {
   postEstudiante,
   putEstudiante,
 } from "../services/estudianteService";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type { IEstudiante } from "../types/models";
 
 const Estudiante = () => {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [estudiante, setEstudiante] = useState<IEstudiante | null>(null);
 
-  const [ci, setCi] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [apellidoPaterno, setApellidoPaterno] = useState("");
-  const [apellidoMaterno, setApellidoMaterno] = useState("");
-  const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
+
+  const { register, handleSubmit } = useForm<IEstudiante>();
+
   const navigate = useNavigate();
 
   const { isAuthenticated, logout } = useAuthStore();
@@ -37,49 +36,34 @@ const Estudiante = () => {
     }
   };
 
-  const handlePostEstudiante = async () => {
+  const onPostEstudiante: SubmitHandler<IEstudiante> = async (data) => {
     try {
-      await postEstudiante(
-        ci,
-        nombre,
-        apellidoPaterno,
-        apellidoMaterno,
-        fechaNacimiento
-      );
-      alert("Exito");
-    } catch (err) {
-      console.log("Error:", err);
-    }
-  };
-
-  const handleDeleteEstudiante = async (e_ci: string) => {
-    try {
-      await deleteEstudiante(e_ci);
+      await postEstudiante(data);
+      setOpen(false);
       loadData();
     } catch (err) {
       console.log("Error:", err);
     }
   };
 
-  const handlePutEstudiante = async (
-    e_ci: string,
-    e_nombre: string,
-    e_apellidoPaterno: string,
-    e_apellidoMaterno: string,
-    e_fechaNacimiento: string,
-    e_estado: boolean
-  ) => {
+  const onPutEstudiante: SubmitHandler<IEstudiante> = async (data) => {
     try {
-      await putEstudiante(
-        e_ci,
-        e_nombre,
-        e_apellidoPaterno,
-        e_apellidoMaterno,
-        e_fechaNacimiento,
-        e_estado
-      );
-      loadData();
+      const estudianteActualizado = {
+        ...data,
+        estado: data.estado === true || data.estado === "true",
+      };
+      await putEstudiante(estudianteActualizado);
       setEditOpen(false);
+      loadData();
+    } catch (err) {
+      console.log("Error:", err);
+    }
+  };
+
+  const handleDeleteEstudiante = async (ci: string) => {
+    try {
+      await deleteEstudiante(ci);
+      loadData();
     } catch (err) {
       console.log("Error:", err);
     }
@@ -127,17 +111,23 @@ const Estudiante = () => {
               <td>{estudiante.id}</td>
               <td>{estudiante.ci}</td>
               <td>{estudiante.nombre}</td>
-              <td>{estudiante.apellido_Paterno}</td>
-              <td>{estudiante.apellido_Materno}</td>
-              <td>{estudiante.fecha_Nacimiento.toString()}</td>
+              <td>{estudiante.apellidoPaterno}</td>
+              <td>{estudiante.apellidoMaterno}</td>
+              <td>{estudiante.fechaNacimiento}</td>
               <td>{estudiante.estado ? "Activo" : "Desactivado"}</td>
               <td>
-                <button className="boton-actualizado" onClick={() => handleDeleteEstudiante(estudiante.ci)}>
+                <button
+                  className="boton-actualizado"
+                  onClick={() => handleDeleteEstudiante(estudiante.ci)}
+                >
                   Eliminar
                 </button>
               </td>
               <td>
-                <button className="boton-actualizado" onClick={() => openEditModal(estudiante)}>
+                <button
+                  className="boton-actualizado"
+                  onClick={() => openEditModal(estudiante)}
+                >
                   Editar
                 </button>
               </td>
@@ -150,62 +140,40 @@ const Estudiante = () => {
         <div className="modal-back">
           <div className="modal-content">
             <h2>Formulario de Estudiante</h2>
-            <button className="modal-close" onClick={() => setOpen(false)}>
+            <button
+              className="modal-close"
+              onClick={() => {
+                setOpen(false);
+                setEstudiante(null);
+              }}
+            >
               &times;
             </button>
 
-            <form onSubmit={handlePostEstudiante}>
+            <form onSubmit={handleSubmit(onPostEstudiante)}>
               <label htmlFor="ci">
                 CI:
-                <input
-                  id="ci"
-                  type="text"
-                  value={ci}
-                  onChange={(e) => setCi(e.target.value)}
-                  required
-                />
+                <input {...register("ci")} />
               </label>
 
               <label htmlFor="nombre">
                 Nombre:
-                <input
-                  id="nombre"
-                  type="text"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                  required
-                />
+                <input {...register("nombre")} />
               </label>
 
               <label htmlFor="apellidoPaterno">
                 Apellido Paterno:
-                <input
-                  id="apellidoPaterno"
-                  type="text"
-                  value={apellidoPaterno}
-                  onChange={(e) => setApellidoPaterno(e.target.value)}
-                  required
-                />
+                <input {...register("apellidoPaterno")} />
               </label>
 
               <label htmlFor="apellidoMaterno">
                 Apellido Materno:
-                <input
-                  id="apellidoMaterno"
-                  type="text"
-                  value={apellidoMaterno}
-                  onChange={(e) => setApellidoMaterno(e.target.value)}
-                />
+                <input {...register("apellidoMaterno")} />
               </label>
 
               <label htmlFor="fechaNacimiento">
                 Fecha de Nacimiento:
-                <input
-                  id="fechaNacimiento"
-                  type="date"
-                  value={fechaNacimiento}
-                  onChange={(e) => setFechaNacimiento(e.target.value)}
-                />
+                <input {...register("fechaNacimiento")} type="date" />
               </label>
 
               <button className="boton-guardar" type="submit">
@@ -224,109 +192,50 @@ const Estudiante = () => {
               &times;
             </button>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handlePutEstudiante(
-                  estudiante.ci,
-                  estudiante.nombre,
-                  estudiante.apellido_Paterno,
-                  estudiante.apellido_Materno,
-                  estudiante.fecha_Nacimiento.toString(),
-                  estudiante.estado
-                );
-              }}
-            >
+            <form onSubmit={handleSubmit(onPutEstudiante)}>
               <label htmlFor="edit-ci">
                 CI:
-                <input
-                  id="edit-ci"
-                  type="text"
-                  value={estudiante.ci}
-                  onChange={(e) =>
-                    setEstudiante({
-                      ...estudiante,
-                      ci: e.target.value,
-                    })
-                  }
-                  required
-                  disabled
-                />
+                <input defaultValue={estudiante.ci} {...register("ci")} />
               </label>
 
               <label htmlFor="edit-nombre">
                 Nombre:
                 <input
-                  id="edit-nombre"
-                  type="text"
-                  value={estudiante.nombre}
-                  onChange={(e) =>
-                    setEstudiante({
-                      ...estudiante,
-                      nombre: e.target.value,
-                    })
-                  }
-                  required
+                  defaultValue={estudiante.nombre}
+                  {...register("nombre")}
                 />
               </label>
 
               <label htmlFor="edit-apellidoPaterno">
                 Apellido Paterno:
                 <input
-                  id="edit-apellidoPaterno"
-                  type="text"
-                  value={estudiante.apellido_Paterno}
-                  onChange={(e) =>
-                    setEstudiante({
-                      ...estudiante,
-                      apellido_Paterno: e.target.value,
-                    })
-                  }
-                  required
+                  defaultValue={estudiante.apellidoPaterno}
+                  {...register("apellidoPaterno")}
                 />
               </label>
 
               <label htmlFor="edit-apellidoMaterno">
                 Apellido Materno:
                 <input
-                  id="edit-apellidoMaterno"
-                  type="text"
-                  value={estudiante.apellido_Materno}
-                  onChange={(e) =>
-                    setEstudiante({
-                      ...estudiante,
-                      apellido_Materno: e.target.value,
-                    })
-                  }
+                  defaultValue={estudiante.apellidoMaterno}
+                  {...register("apellidoMaterno")}
                 />
               </label>
 
               <label htmlFor="edit-fechaNacimiento">
                 Fecha de Nacimiento:
                 <input
-                  id="edit-fechaNacimiento"
+                  defaultValue={estudiante.fechaNacimiento}
+                  {...register("fechaNacimiento")}
                   type="date"
-                  value={estudiante.fecha_Nacimiento}
-                  onChange={(e) =>
-                    setEstudiante({
-                      ...estudiante,
-                      fecha_Nacimiento: e.target.value,
-                    })
-                  }
                 />
               </label>
 
               <label htmlFor="edit-estado">
                 Estado:
                 <select
-                  id="edit-estado"
-                  value={estudiante.estado ? "true" : "false"}
-                  onChange={(e) =>
-                    setEstudiante({
-                      ...estudiante,
-                      estado: e.target.value === "true",
-                    })
-                  }
+                  defaultValue={estudiante.estado ? "Activo" : "Desactivado"}
+                  {...register("estado")}
                 >
                   <option value="true">Activo</option>
                   <option value="false">Inactivo</option>

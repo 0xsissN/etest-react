@@ -26,6 +26,8 @@ import {
   getCarreraByID,
   postTestCarrera,
 } from "../services/testCarreraService";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type { ITesti } from "../types/models";
 
 const TestCarrera = () => {
   const [open, setOpen] = useState(false);
@@ -48,6 +50,8 @@ const TestCarrera = () => {
   const [estado, setEstado] = useState(false);
   const [selCarrera, setSelCarrera] = useState<ISeleccion[]>([]);
   const [selAptitud, setSelAptitud] = useState<ISeleccion[]>([]);
+
+  const { register, handleSubmit } = useForm<ITesti>();
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
@@ -110,9 +114,11 @@ const TestCarrera = () => {
     }
   };
 
-  const handlePostTest = async () => {
+  const onPostTest: SubmitHandler<ITesti> = async (data) => {
     try {
-      await postTest(codigo, estudiante, colegio, curso);
+      await postTest(data);
+      loadTests();
+      setEditOpen(false);
     } catch (err) {
       console.error("Error:", err);
     }
@@ -305,29 +311,19 @@ const TestCarrera = () => {
               &times;
             </button>
 
-            <form onSubmit={handlePostTest}>
+            <form onSubmit={handleSubmit(onPostTest)}>
               <label htmlFor="codigo">
                 Código:
-                <input
-                  id="codigo"
-                  type="text"
-                  value={codigo}
-                  onChange={(e) => setCodigo(e.target.value)}
-                  required
-                />
+                <input {...register("codigo")} />
               </label>
 
               <label htmlFor="estudiante">
                 Estudiante:
-                <select
-                  value={estudiante}
-                  onChange={(e) => setEstudiante(e.target.value)}
-                  required
-                >
+                <select {...register("estudiante_ci")}>
                   <option value="">Seleccionar estudiante</option>
                   {estudiantes.map((est) => (
                     <option key={est.ci} value={est.ci}>
-                      {est.nombre} {est.apellido_Paterno} (CI: {est.ci})
+                      {est.nombre} {est.apellidoPaterno} (CI: {est.ci})
                     </option>
                   ))}
                 </select>
@@ -335,11 +331,7 @@ const TestCarrera = () => {
 
               <label htmlFor="colegio">
                 Colegio:
-                <select
-                  value={colegio}
-                  onChange={(e) => setColegio(e.target.value)}
-                  required
-                >
+                <select {...register("colegio_codigo")}>
                   <option value="">Seleccionar colegio</option>
                   {colegios.map((col) => (
                     <option key={col.codigo} value={col.codigo}>
@@ -351,11 +343,7 @@ const TestCarrera = () => {
 
               <label htmlFor="curso">
                 Curso:
-                <select
-                  value={curso}
-                  onChange={(e) => setCurso(e.target.value)}
-                  required
-                >
+                <select {...register("curso_id")}>
                   <option value="">Seleccionar curso</option>
                   {cursos.map((c) => (
                     <option key={c.id} value={c.id.toString()}>
@@ -369,6 +357,7 @@ const TestCarrera = () => {
                 Guardar Test
               </button>
             </form>
+
             <form onSubmit={handleMultiplesCarreras}>
               <label htmlFor="test">
                 Test:
@@ -474,7 +463,7 @@ const TestCarrera = () => {
                   <option value="">Seleccionar estudiante</option>
                   {estudiantes.map((est) => (
                     <option key={est.ci} value={est.ci}>
-                      {est.nombre} {est.apellido_Paterno} (CI: {est.ci})
+                      {est.nombre} {est.apellidoPaterno} (CI: {est.ci})
                     </option>
                   ))}
                 </select>

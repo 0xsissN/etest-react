@@ -1,31 +1,18 @@
 import type { IColegio } from "../types/models";
 import api from "./api";
 
-export const getColegio = () => api.get<IColegio[]>("/Colegio");
+export const getColegio = async () => api.get<IColegio[]>("/Colegio");
 
-export const postColegio = async (
-  codigo: string,
-  nombre: string,
-  direccion: string
-) => {
-  const response = await api.post(
-    `/Colegio?codigo=${codigo}&nombre=${nombre}&direccion=${direccion}`
-  );
-
-  return response;
+export const postColegio = async (colegio: IColegio) => {
+  return await api.post(`/Colegio`, colegio);
 };
 
 export const deleteColegio = async (codigo: string) => {
-  const response = await api.delete(`/Colegio?codigo=${codigo}`);
-  return response;
+  return await api.delete(`/Colegio?codigo=${codigo}`);
 };
 
-export const putColegio = async (
-  codigo: string,
-  nombre: string,
-  direccion: string,
-  estado: Boolean
-) => {
-  const response = await api.put(`/Colegio?codigo=${codigo}&nombre=${nombre}&direccion=${direccion}&estado=${estado}`)
-  return response
+export const putColegio = async (colegio: IColegio) => {
+  console.log(colegio);
+  
+  return await api.put(`/Colegio`, colegio);
 };

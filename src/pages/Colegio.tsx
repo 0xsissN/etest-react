@@ -8,17 +8,18 @@ import {
   postColegio,
   putColegio,
 } from "../services/colegioService";
+import { useForm, type SubmitHandler } from "react-hook-form";
 
 const Colegio = () => {
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [colegio, setColegio] = useState<IColegio | null>(null);
 
-  const [nombre, setNombre] = useState("");
-  const [direccion, setDireccion] = useState("");
-  const [codigo, setCodigo] = useState("");
+  const [colegio, setColegio] = useState<IColegio | null>(null);
   const [colegios, setColegios] = useState<IColegio[]>([]);
+
   const navigate = useNavigate();
+
+  const { register, handleSubmit } = useForm<IColegio>();
 
   const { isAuthenticated, logout } = useAuthStore();
 
@@ -35,31 +36,24 @@ const Colegio = () => {
     }
   };
 
-  const handlePostColegio = async () => {
+  const onPostColegio: SubmitHandler<IColegio> = async (data) => {
     try {
-      await postColegio(codigo, nombre, direccion);
-    } catch (err) {
-      console.log("Error:", err);
-    }
-  };
-
-  const handleDeleteColegio = async (c_codigo: string) => {
-    try {
-      await deleteColegio(c_codigo);
+      await postColegio(data);
       loadData();
+      setOpen(false);
     } catch (err) {
       console.log("Error:", err);
     }
   };
 
-  const handlePutColegio = async (
-    c_codigo: string,
-    c_nombre: string,
-    c_direccion: string,
-    c_estado: boolean
-  ) => {
+  const onPutColegio: SubmitHandler<IColegio> = async (data) => {
     try {
-      await putColegio(c_codigo, c_nombre, c_direccion, c_estado);
+      const colegioActualizado = {
+        ...data,
+        estado: data.estado === true || data.estado === "true",
+      };
+
+      await putColegio(colegioActualizado);
       loadData();
       setEditOpen(false);
     } catch (err) {
@@ -67,8 +61,17 @@ const Colegio = () => {
     }
   };
 
-  const openEditModal = (colegio: IColegio) => {
-    setColegio(colegio);
+  const handleDeleteColegio = async (codigo: string) => {
+    try {
+      await deleteColegio(codigo);
+      loadData();
+    } catch (err) {
+      console.log("Error:", err);
+    }
+  };
+
+  const openEditModal = (data: IColegio) => {
+    setColegio(data);
     setEditOpen(true);
   };
 
@@ -112,12 +115,20 @@ const Colegio = () => {
               <td>{colegio.codigo}</td>
               <td>{colegio.estado ? "Activo" : "Desactivado"}</td>
               <td>
-                <button className="boton-actualizado" onClick={() => handleDeleteColegio(colegio.codigo)}>
+                <button
+                  className="boton-actualizado"
+                  onClick={() => handleDeleteColegio(colegio.codigo)}
+                >
                   Eliminar
                 </button>
               </td>
               <td>
-                <button className="boton-actualizado" onClick={() => openEditModal(colegio)}>Editar</button>
+                <button
+                  className="boton-actualizado"
+                  onClick={() => openEditModal(colegio)}
+                >
+                  Editar
+                </button>
               </td>
             </tr>
           ))}
@@ -132,38 +143,20 @@ const Colegio = () => {
               &times;
             </button>
 
-            <form onSubmit={handlePostColegio}>
+            <form onSubmit={handleSubmit(onPostColegio)}>
               <label htmlFor="nombre">
                 Nombre:
-                <input
-                  id="nombre"
-                  type="text"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                  required
-                />
+                <input {...register("nombre")} />
               </label>
 
               <label htmlFor="direccion">
                 Dirección:
-                <input
-                  id="direccion"
-                  type="text"
-                  value={direccion}
-                  onChange={(e) => setDireccion(e.target.value)}
-                  required
-                />
+                <input {...register("direccion")} />
               </label>
 
               <label htmlFor="codigo">
                 Código:
-                <input
-                  id="codigo"
-                  type="text"
-                  value={codigo}
-                  onChange={(e) => setCodigo(e.target.value)}
-                  required
-                />
+                <input {...register("codigo")} />
               </label>
 
               <button className="boton-guardar" type="submit">
@@ -182,77 +175,32 @@ const Colegio = () => {
               &times;
             </button>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handlePutColegio(
-                  colegio.codigo,
-                  colegio.nombre,
-                  colegio.direccion,
-                  colegio.estado
-                );
-              }}
-            >
+            <form onSubmit={handleSubmit(onPutColegio)}>
               <label htmlFor="edit-nombre">
                 Nombre:
-                <input
-                  id="edit-nombre"
-                  type="text"
-                  value={colegio.nombre}
-                  onChange={(e) =>
-                    setColegio({
-                      ...colegio,
-                      nombre: e.target.value,
-                    })
-                  }
-                  required
-                />
+                <input defaultValue={colegio.nombre} {...register("nombre")} />
               </label>
 
               <label htmlFor="edit-direccion">
                 Dirección:
                 <input
-                  id="edit-direccion"
-                  type="text"
-                  value={colegio.direccion}
-                  onChange={(e) =>
-                    setColegio({
-                      ...colegio,
-                      direccion: e.target.value,
-                    })
-                  }
-                  required
+                  defaultValue={colegio.direccion}
+                  {...register("direccion")}
                 />
               </label>
 
               <label htmlFor="edit-codigo">
                 Código:
-                <input
-                  id="edit-codigo"
-                  type="text"
-                  value={colegio.codigo}
-                  onChange={(e) =>
-                    setColegio({
-                      ...colegio,
-                      codigo: e.target.value,
-                    })
-                  }
-                  required
-                  disabled
-                />
+                <input defaultValue={colegio.codigo} {...register("codigo")} />
               </label>
 
               <label htmlFor="edit-estado">
                 Estado:
                 <select
-                  id="edit-estado"
-                  value={colegio.estado ? "true" : "false"}
-                  onChange={(e) =>
-                    setColegio({
-                      ...colegio,
-                      estado: e.target.value === "true",
-                    })
+                  defaultValue={
+                    colegio.estado === true ? "Activo" : "Desactivado"
                   }
+                  {...register("estado")}
                 >
                   <option value="true">Activo</option>
                   <option value="false">Inactivo</option>
