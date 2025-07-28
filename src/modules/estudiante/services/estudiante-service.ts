@@ -1,5 +1,5 @@
-import api from "./api";
-import type { IEstudiante } from "../types/models";
+import api from "../../../services/api";
+import type { IEstudiante } from "../../../types/models";
 
 export const getEstudiante = async () => api.get<IEstudiante[]>("/Estudiante");
 

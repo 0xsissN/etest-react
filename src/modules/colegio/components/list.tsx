@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { IColegio } from "../../../types/models";
-import { deleteColegio, getColegio } from "../../../services/colegioService";
 import { ColegioPutForm } from "./form-put";
+import { deleteColegio, getColegio } from "../services/colegio-service";
 
 export const ColegioList = () => {
   const [colegios, setColegios] = useState<IColegio[]>([]);

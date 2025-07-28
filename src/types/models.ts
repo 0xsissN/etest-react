@@ -44,7 +44,7 @@ export interface ITest {
   carreras: ISeleccion[];
 }
 
-export interface ILogin {
+export interface IUsuario {
   username: string
   password: string
 } 
@@ -79,8 +79,4 @@ export interface ICurso {
 export interface ISeleccion {
   id: number;
   carreras: string;
-}
-
-export interface Close{
-  onClose: () => void
 }

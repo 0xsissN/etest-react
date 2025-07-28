@@ -1,14 +1,10 @@
-import axios from "axios";
-import {useAuthStore} from "../store/useAuthStore";
+import api from "../../../services/api";
+import { useAuthStore } from "../../../store/useAuthStore";
+import type { IUsuario } from "../../../types/models";
 
-const Auth = async (username: string, password: string) => {
-  const response = await axios.post("https://localhost:7089/api/Auth/Login", {
-    username,
-    password,
-  });
-
+export const Auth = async (usuario: IUsuario) => {
+  const response = await api.post(`/Auth/Login`, usuario);
   const token = response.data.token;
-
   const payload = JSON.parse(atob(token.split(".")[1]));
   const rol =
     payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
@@ -17,5 +13,3 @@ const Auth = async (username: string, password: string) => {
 
   useAuthStore.getState().login(token, user, rol);
 };
-
-export default Auth;

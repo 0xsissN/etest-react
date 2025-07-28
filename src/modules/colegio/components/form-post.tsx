@@ -1,9 +1,12 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { IColegio } from "../../../types/models";
-import { postColegio } from "../../../services/colegioService";
-import type { Close } from "../../../types/models";
+import { postColegio } from "../services/colegio-service";
 
-export const ColegioPostForm = ({ onClose }: Close) => {
+interface Props {
+  onClose: () => void;
+}
+
+export const ColegioPostForm = ({ onClose }: Props) => {
   const { register, handleSubmit } = useForm<IColegio>();
 
   const onPostColegio: SubmitHandler<IColegio> = async (data) => {

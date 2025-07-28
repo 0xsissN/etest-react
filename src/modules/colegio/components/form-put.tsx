@@ -1,7 +1,6 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { IColegio } from "../../../types/models";
-import { putColegio } from "../../../services/colegioService";
-import type { Close } from "../../../types/models";
+import { putColegio } from "../services/colegio-service";
 
 interface Props {
   data: IColegio | null;
@@ -19,6 +18,7 @@ export const ColegioPutForm = ({ data, onClose }: Props) => {
       };
 
       await putColegio(colegioActualizado);
+      onClose();
     } catch (err) {
       console.log("Error:", err);
     }

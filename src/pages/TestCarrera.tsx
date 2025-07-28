@@ -12,8 +12,7 @@ import type {
 } from "../types/models";
 import { getAptitud, getAptitudByID } from "../services/aptitudService";
 import { getCarreraByAptitud } from "../services/carreraService";
-import { getEstudiante } from "../services/estudianteService";
-import { getColegio } from "../services/colegioService";
+
 import { getCurso } from "../services/cursoService";
 import {
   deleteTest,
@@ -28,6 +27,8 @@ import {
 } from "../services/testCarreraService";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { ITesti } from "../types/models";
+import { getColegio } from "../modules/colegio/services/colegio-service";
+import { getEstudiante } from "../modules/estudiante/services/estudiante-service";
 
 const TestCarrera = () => {
   const [open, setOpen] = useState(false);
@@ -39,7 +40,7 @@ const TestCarrera = () => {
   const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
   const [colegios, setColegios] = useState<IColegio[]>([]);
   const [cursos, setCursos] = useState<ICurso[]>([]);
-  
+
   const [estudiante, setEstudiante] = useState("");
   const [colegio, setColegio] = useState("");
   const [curso, setCurso] = useState("");
