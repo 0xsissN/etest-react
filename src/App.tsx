@@ -8,8 +8,8 @@ import "./App.css";
 import RootLayout from "./layout/RootLayout";
 import Login from "./pages/Login";
 import Estudiante from "./pages/Estudiante";
-import Colegio from "./pages/Colegio";
 import TestCarrera from "./pages/TestCarrera";
+import { ColegioPage } from "./modules/colegio/pages";
 
 function App() {
   const router = createBrowserRouter(
@@ -17,7 +17,7 @@ function App() {
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Login />} />
         <Route path="/estudiante" element={<Estudiante />} />
-        <Route path="/colegio" element={<Colegio />} />
+        <Route path="/colegio" element={<ColegioPage />} />
         <Route path="/testCarrera" element={<TestCarrera />} />
       </Route>
     )

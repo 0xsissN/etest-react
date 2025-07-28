@@ -1,5 +1,5 @@
-import type { IColegio } from "../types/models";
-import api from "./api";
+import api from "../../../services/api";
+import type { IColegio } from "../../../types/models";
 
 export const getColegio = async () => api.get<IColegio[]>("/Colegio");
 

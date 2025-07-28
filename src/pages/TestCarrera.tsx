@@ -39,6 +39,7 @@ const TestCarrera = () => {
   const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
   const [colegios, setColegios] = useState<IColegio[]>([]);
   const [cursos, setCursos] = useState<ICurso[]>([]);
+  
   const [estudiante, setEstudiante] = useState("");
   const [colegio, setColegio] = useState("");
   const [curso, setCurso] = useState("");

@@ -26,6 +26,10 @@ export interface ITesti {
   estado: boolean | string;
 }
 
+export interface ITestCarrera {
+
+}
+
 export interface ITest {
   id: number;
   codigo: string;
@@ -77,3 +81,6 @@ export interface ISeleccion {
   carreras: string;
 }
 
+export interface Close{
+  onClose: () => void
+}
