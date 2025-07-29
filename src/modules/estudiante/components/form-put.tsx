@@ -11,8 +11,6 @@ export const EstudiantePutForm = ({ data, onClose }: Props) => {
   const { register, handleSubmit } = useForm<IEstudiante>();
 
   const onPutEstudiante: SubmitHandler<IEstudiante> = async (data) => {
-    console.log(data);
-    
     try {
       const estudianteActualizado = {
         ...data,

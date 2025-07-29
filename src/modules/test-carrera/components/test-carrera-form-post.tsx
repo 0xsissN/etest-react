@@ -5,7 +5,11 @@ import { getTest } from "../services/test-service";
 import { getCarreraByAptitud } from "../services/carrera-service";
 import { postTestCarrera } from "../services/test-carrera-service";
 
-export const TestCarreraFormPost = () => {
+interface Props {
+  onClose: () => void;
+}
+
+export const TestCarreraFormPost = ({ onClose }: Props) => {
   const [aptitudes, setAptitudes] = useState<IAptitud[]>([]);
   const [tests, setTests] = useState<ITest[]>([]);
   const [carreras, setCarreras] = useState<ICarrera[]>([]);
@@ -40,9 +44,9 @@ export const TestCarreraFormPost = () => {
 
   const loadCarreras = async () => {
     try {
-      const sAptitudes = seleccionAptitudes.map((aptitudID) => {
-        getCarreraByAptitud(aptitudID);
-      });
+      const sAptitudes = seleccionAptitudes.map((aptitudID) =>
+        getCarreraByAptitud(aptitudID)
+      );
 
       const response = await Promise.all(sAptitudes);
       const listaCarreras = response.flatMap((res) => res.data);
@@ -76,53 +80,65 @@ export const TestCarreraFormPost = () => {
   }, []);
 
   return (
-    <form onSubmit={onPostMultipleCarrera}>
-      <label htmlFor="test">
-        Test:
-        <select
-          value={testCodigo}
-          onChange={(e) => setTestCodigo(e.target.value)}
-          required
-        >
-          <option value="">Seleccionar test</option>
-          {tests.map((c) => (
-            <option key={c.id} value={c.codigo}>
-              Test id: {c.id}, Codigo: {c.codigo}, Nombre: {c.nombreEstudiante}
-            </option>
-          ))}
-        </select>
-      </label>
+    <>
+      <div className="modal-back">
+        <div className="modal-content-t">
+          <h1>Registrar Test de Carrera</h1>
+          <button className="modal-close" onClick={onClose}>
+            &times;
+          </button>
 
-      <div className="a-c-contenedor">
-        <div className="a-box">
-          <h2>Aptitudes</h2>
-          <div className="a-lista">
-            {aptitudes.map((aptitud) => (
-              <div
-                key={aptitud.id}
-                className="a-item"
-                onClick={() => seleccionesAptitudes(aptitud.id)}
+          <form onSubmit={onPostMultipleCarrera}>
+            <label htmlFor="test">
+              Test:
+              <select
+                value={testCodigo}
+                onChange={(e) => setTestCodigo(e.target.value)}
+                required
               >
-                {aptitud.nombre}
+                <option value="">Seleccionar test</option>
+                {tests.map((c) => (
+                  <option key={c.id} value={c.codigo}>
+                    Test id: {c.id}, Codigo: {c.codigo}, Nombre:{" "}
+                    {c.nombreEstudiante}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <div className="a-c-contenedor">
+              <div className="a-box">
+                <h2>Aptitudes</h2>
+                <div className="a-lista">
+                  {aptitudes.map((aptitud) => (
+                    <div
+                      key={aptitud.id}
+                      className="a-item"
+                      onClick={() => seleccionesAptitudes(aptitud.id)}
+                    >
+                      {aptitud.nombre}
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-        <div className="a-box">
-          <h2>Carreras</h2>
-          <div className="a-lista">
-            {carreras.map((carrera) => (
-              <div key={carrera.id} className="a-item">
-                {carrera.nombre}
+              <div className="a-box">
+                <h2>Carreras</h2>
+                <div className="a-lista">
+                  {carreras.map((carrera) => (
+                    <div key={carrera.id} className="a-item">
+                      {carrera.nombre}
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+
+            <button className="boton-guardar" type="submit">
+              Guardar
+            </button>
+          </form>
         </div>
       </div>
-
-      <button className="boton-guardar" type="submit">
-        Guardar
-      </button>
-    </form>
+    </>
   );
 };

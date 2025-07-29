@@ -1,5 +1,4 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useAuthStore } from "../../../store/useAuthStore";
 import type {
   IColegio,
   ICurso,
@@ -11,6 +10,7 @@ import { useEffect, useState } from "react";
 import { getEstudiante } from "../../estudiante/services/estudiante-service";
 import { getColegio } from "../../colegio/services/colegio-service";
 import { getCurso } from "../services/curso-service";
+import { TestCarreraFormPost } from "./test-carrera-form-post";
 
 interface Props {
   onClose: () => void;
@@ -64,60 +64,62 @@ export const TestFormPost = ({ onClose }: Props) => {
   });
 
   return (
-    <div className="modal-back">
-      <div className="modal-content-t">
-        <h1>Registrar Test de Carrera</h1>
-        <button className="modal-close" onClick={onClose}>
-          &times;
-        </button>
-
-        <form onSubmit={handleSubmit(onPostTest)}>
-          <label htmlFor="codigo">
-            Código:
-            <input {...register("codigo")} />
-          </label>
-
-          <label htmlFor="estudiante">
-            Estudiante:
-            <select {...register("estudianteCI")}>
-              <option value="">Seleccionar estudiante</option>
-              {estudiantes.map((est) => (
-                <option key={est.ci} value={est.ci}>
-                  {est.nombre} {est.apellidoPaterno} (CI: {est.ci})
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label htmlFor="colegio">
-            Colegio:
-            <select {...register("colegioCodigo")}>
-              <option value="">Seleccionar colegio</option>
-              {colegios.map((col) => (
-                <option key={col.codigo} value={col.codigo}>
-                  {col.nombre} (Código: {col.codigo})
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label htmlFor="curso">
-            Curso:
-            <select {...register("cursoID")}>
-              <option value="">Seleccionar curso</option>
-              {cursos.map((c) => (
-                <option key={c.id} value={c.id.toString()}>
-                  {c.nombre}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <button className="boton-guardar" type="submit">
-            Guardar Test
+    <>
+      <div className="modal-back">
+        <div className="modal-content-t">
+          <h1>Registrar Test</h1>
+          <button className="modal-close" onClick={onClose}>
+            &times;
           </button>
-        </form>
+
+          <form onSubmit={handleSubmit(onPostTest)}>
+            <label htmlFor="codigo">
+              Código:
+              <input {...register("codigo")} />
+            </label>
+
+            <label htmlFor="estudiante">
+              Estudiante:
+              <select {...register("estudianteCI")}>
+                <option value="">Seleccionar estudiante</option>
+                {estudiantes.map((est) => (
+                  <option key={est.ci} value={est.ci}>
+                    {est.nombre} {est.apellidoPaterno} (CI: {est.ci})
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label htmlFor="colegio">
+              Colegio:
+              <select {...register("colegioCodigo")}>
+                <option value="">Seleccionar colegio</option>
+                {colegios.map((col) => (
+                  <option key={col.codigo} value={col.codigo}>
+                    {col.nombre} (Código: {col.codigo})
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label htmlFor="curso">
+              Curso:
+              <select {...register("cursoID")}>
+                <option value="">Seleccionar curso</option>
+                {cursos.map((c) => (
+                  <option key={c.id} value={c.id.toString()}>
+                    {c.nombre}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <button className="boton-guardar" type="submit">
+              Guardar
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

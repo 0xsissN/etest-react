@@ -5,7 +5,6 @@ export interface IColegio {
   direccion: string;
   estado: boolean | string;
 }
-
 export interface IEstudiante {
   id: number;
   ci: string;
@@ -15,22 +14,10 @@ export interface IEstudiante {
   fechaNacimiento: string;
   estado: boolean | string;
 }
-
 export interface IUsuario {
   username: string;
   password: string;
 }
-
-export interface IPTestCarrera {
-  test_codigo: string;
-  carrera_id: number;
-}
-
-export interface IDTestCarrera {
-  test_id: number;
-  carrera_id: number;
-}
-
 export interface ITest {
   id: number;
   codigo: string;
@@ -44,12 +31,10 @@ export interface ITest {
   aptitudes: ISeleccion[];
   carreras: ISeleccion[];
 }
-
 export interface ITestCarrera {
   id: number;
   codigo: string;
 }
-
 export interface iAuthState {
   token: string | null;
   username: string | null;
@@ -58,17 +43,14 @@ export interface iAuthState {
   login: (token: string, username: string, rol: string) => void;
   logout: () => void;
 }
-
 export interface IAptitud {
   id: number;
   nombre: string;
 }
-
 export interface ICarrera {
   id: number;
   nombre: string;
 }
-
 export interface ICurso {
   id: number;
   nombre: string;

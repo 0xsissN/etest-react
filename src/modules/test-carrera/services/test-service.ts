@@ -15,6 +15,6 @@ export const deleteTest = async (id: string) => {
 
 export const putTest = async (test: ITest) => {
   return await api.put(
-    `/Test?codigo=${test.codigo}&estudiante_ci=${test.estudianteCI}&colegio_codigo=${test.colegioCodigo}&curso_id=${test.cursoID}&usuario_id=1&estado=${test.estado}`
+    `/Test?codigo=${test.codigo}&estudiante_ci=${test.estudianteCI}&colegio_codigo=${test.colegioCodigo}&curso_id=${test.cursoID}&estado=${test.estado}&usuario_id=1`
   );
 };
