@@ -4,15 +4,17 @@ import { postEstudiante } from "../services/estudiante-service";
 
 interface Props {
   onClose: () => void;
+  onLoad: () => void
 }
 
-export const EstudiantePostForm = ({ onClose }: Props) => {
+export const EstudiantePostForm = ({ onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<IEstudiante>();
 
   const onPostEstudiante: SubmitHandler<IEstudiante> = async (data) => {
     try {
       await postEstudiante(data);
       onClose();
+      onLoad();
     } catch (err) {
       console.log("Error:", err);
     }

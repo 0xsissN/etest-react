@@ -5,9 +5,10 @@ import { putColegio } from "../services/colegio-service";
 interface Props {
   data: IColegio | null;
   onClose: () => void;
+  onLoad: () => void
 }
 
-export const ColegioPutForm = ({ data, onClose }: Props) => {
+export const ColegioPutForm = ({ data, onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<IColegio>();
 
   const onPutColegio: SubmitHandler<IColegio> = async (data) => {
@@ -19,6 +20,7 @@ export const ColegioPutForm = ({ data, onClose }: Props) => {
 
       await putColegio(colegioActualizado);
       onClose();
+      onLoad();
     } catch (err) {
       console.log("Error:", err);
     }

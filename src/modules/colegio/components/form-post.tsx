@@ -4,15 +4,17 @@ import { postColegio } from "../services/colegio-service";
 
 interface Props {
   onClose: () => void;
+  onLoad: () => void
 }
 
-export const ColegioPostForm = ({ onClose }: Props) => {
+export const ColegioPostForm = ({ onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<IColegio>();
 
   const onPostColegio: SubmitHandler<IColegio> = async (data) => {
     try {
       await postColegio(data);
       onClose();
+      onLoad();
     } catch (err) {
       console.log("Error:", err);
     }

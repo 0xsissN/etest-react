@@ -5,9 +5,10 @@ import { putEstudiante } from "../services/estudiante-service";
 interface Props {
   data: IEstudiante | null;
   onClose: () => void;
+  onLoad: () => void;
 }
 
-export const EstudiantePutForm = ({ data, onClose }: Props) => {
+export const EstudiantePutForm = ({ data, onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<IEstudiante>();
 
   const onPutEstudiante: SubmitHandler<IEstudiante> = async (data) => {
@@ -19,6 +20,7 @@ export const EstudiantePutForm = ({ data, onClose }: Props) => {
 
       await putEstudiante(estudianteActualizado);
       onClose();
+      onLoad();
     } catch (err) {
       console.log("Error:", err);
     }

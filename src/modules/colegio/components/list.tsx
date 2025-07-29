@@ -2,11 +2,16 @@ import { useEffect, useState } from "react";
 import type { IColegio } from "../../../types/models";
 import { ColegioPutForm } from "./form-put";
 import { deleteColegio, getColegio } from "../services/colegio-service";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { ColegioPostForm } from "./form-post";
 
 export const ColegioList = () => {
   const [colegios, setColegios] = useState<IColegio[]>([]);
-  const [open, setOpen] = useState(false);
   const [colegio, setColegio] = useState<IColegio | null>(null);
+  const { rol } = useAuthStore();
+
+  const [open, setOpen] = useState(false);
+  const [registroOpen, setRegistroOpen] = useState(false);
 
   const loadData = async () => {
     try {
@@ -40,6 +45,16 @@ export const ColegioList = () => {
             <th>Dirección</th>
             <th>Código</th>
             <th>Estado</th>
+            {rol === "Admin" && (
+              <th colSpan={2}>
+                <button
+                  className="boton-registro"
+                  onClick={() => setRegistroOpen(true)}
+                >
+                  Agregar Colegio
+                </button>
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -50,31 +65,48 @@ export const ColegioList = () => {
               <td>{colegio.direccion}</td>
               <td>{colegio.codigo}</td>
               <td>{colegio.estado ? "Activo" : "Desactivado"}</td>
-              <td>
-                <button
-                  className="boton-actualizado"
-                  onClick={() => handleDeleteColegio(colegio.codigo)}
-                >
-                  Eliminar
-                </button>
-              </td>
-              <td>
-                <button
-                  className="boton-actualizado"
-                  onClick={() => {
-                    setOpen(true);
-                    setColegio(colegio);
-                  }}
-                >
-                  Editar
-                </button>
-              </td>
+              {rol === "Admin" && (
+                <>
+                  <td>
+                    <button
+                      className="boton-actualizado"
+                      onClick={() => handleDeleteColegio(colegio.codigo)}
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="boton-actualizado"
+                      onClick={() => {
+                        setOpen(true);
+                        setColegio(colegio);
+                      }}
+                    >
+                      Editar
+                    </button>
+                  </td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
 
-      {open && <ColegioPutForm data={colegio} onClose={() => setOpen(false)} />}
+      {open && (
+        <ColegioPutForm
+          data={colegio}
+          onClose={() => setOpen(false)}
+          onLoad={loadData}
+        />
+      )}
+      
+      {registroOpen && (
+        <ColegioPostForm
+          onClose={() => setRegistroOpen(false)}
+          onLoad={loadData}
+        />
+      )}
     </>
   );
 };

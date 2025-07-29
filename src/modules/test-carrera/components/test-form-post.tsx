@@ -10,13 +10,13 @@ import { useEffect, useState } from "react";
 import { getEstudiante } from "../../estudiante/services/estudiante-service";
 import { getColegio } from "../../colegio/services/colegio-service";
 import { getCurso } from "../services/curso-service";
-import { TestCarreraFormPost } from "./test-carrera-form-post";
 
 interface Props {
   onClose: () => void;
+  onLoad: () => void;
 }
 
-export const TestFormPost = ({ onClose }: Props) => {
+export const TestFormPost = ({ onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<ITest>();
   const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
   const [colegios, setColegios] = useState<IColegio[]>([]);
@@ -25,6 +25,8 @@ export const TestFormPost = ({ onClose }: Props) => {
   const onPostTest: SubmitHandler<ITest> = async (data) => {
     try {
       await postTest(data);
+      onClose();
+      onLoad();
     } catch (err) {
       console.error("Error:", err);
     }

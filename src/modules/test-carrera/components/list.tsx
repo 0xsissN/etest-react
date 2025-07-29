@@ -4,11 +4,18 @@ import { deleteTest, getTest } from "../services/test-service";
 import { getAptitudByID } from "../services/aptitud-service";
 import { getCarreraByID } from "../services/test-carrera-service";
 import { TestCarreraPutForm } from "./test-carrera-put";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { TestFormPost } from "./test-form-post";
+import { TestCarreraFormPost } from "./test-carrera-form-post";
 
 export const TestCarreraList = () => {
   const [tests, setTests] = useState<ITest[]>([]);
   const [test, setTest] = useState<ITest | null>(null);
+  const { rol } = useAuthStore();
+
   const [open, setOpen] = useState(false);
+  const [tOpen, setTOpen] = useState(false);
+  const [tcOpen, setTCOpen] = useState(false);
 
   const loadTests = async () => {
     try {
@@ -57,6 +64,26 @@ export const TestCarreraList = () => {
             <th>Estado</th>
             <th>Aptitudes</th>
             <th>Carreras</th>
+            {rol === "Admin" && (
+              <>
+                <th>
+                  <button
+                    className="boton-registro"
+                    onClick={() => setTOpen(true)}
+                  >
+                    Registrar Test
+                  </button>
+                </th>
+                <th>
+                  <button
+                    className="boton-registro"
+                    onClick={() => setTCOpen(true)}
+                  >
+                    Registrar Carreras
+                  </button>
+                </th>
+              </>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -78,32 +105,51 @@ export const TestCarreraList = () => {
                   <div key={carrera.id}>{carrera.carreras}</div>
                 ))}
               </td>
-              <td>
-                <button
-                  className="boton-actualizado"
-                  onClick={() => handleDeleteTest(test.codigo)}
-                >
-                  Eliminar
-                </button>
-              </td>
-              <td>
-                <button
-                  className="boton-actualizado"
-                  onClick={() => {
-                    setOpen(true);
-                    setTest(test);
-                  }}
-                >
-                  Editar
-                </button>
-              </td>
+              {rol === "Admin" && (
+                <>
+                  <td>
+                    <button
+                      className="boton-actualizado"
+                      onClick={() => handleDeleteTest(test.codigo)}
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="boton-actualizado"
+                      onClick={() => {
+                        setOpen(true);
+                        setTest(test);
+                      }}
+                    >
+                      Editar
+                    </button>
+                  </td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
 
       {open && (
-        <TestCarreraPutForm data={test} onClose={() => setOpen(false)} />
+        <TestCarreraPutForm
+          data={test}
+          onClose={() => setOpen(false)}
+          onLoad={loadTests}
+        />
+      )}
+      
+      {tOpen && (
+        <TestFormPost onClose={() => setTOpen(false)} onLoad={loadTests} />
+      )}
+
+      {tcOpen && (
+        <TestCarreraFormPost
+          onClose={() => setTCOpen(false)}
+          onLoad={loadTests}
+        />
       )}
     </>
   );

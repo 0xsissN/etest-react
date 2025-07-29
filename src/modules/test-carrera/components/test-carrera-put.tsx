@@ -15,9 +15,10 @@ import { getCurso } from "../services/curso-service";
 interface Props {
   data: ITest | null;
   onClose: () => void;
+  onLoad: () => void;
 }
 
-export const TestCarreraPutForm = ({ data, onClose }: Props) => {
+export const TestCarreraPutForm = ({ data, onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<ITest>();
   const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
   const [colegios, setColegios] = useState<IColegio[]>([]);
@@ -52,17 +53,16 @@ export const TestCarreraPutForm = ({ data, onClose }: Props) => {
 
   const onPutTest: SubmitHandler<ITest> = async (data) => {
     console.log(data);
-    
+
     try {
       const testCarreraActualizado = {
         ...data,
         estado: data.estado === true || data.estado === "true",
       };
 
-      console.log(testCarreraActualizado);
-
       await putTest(testCarreraActualizado);
       onClose();
+      onLoad();
     } catch (err) {
       console.log("Error:", err);
     }
@@ -96,7 +96,11 @@ export const TestCarreraPutForm = ({ data, onClose }: Props) => {
         <form onSubmit={handleSubmit(onPutTest)}>
           <label htmlFor="edit-codigo">
             Código:
-            <input defaultValue={data?.codigo} value={data?.codigo} />
+            <input
+              defaultValue={data?.codigo}
+              {...register("codigo")}
+              disabled
+            />
           </label>
 
           <label htmlFor="edit-estudiante">

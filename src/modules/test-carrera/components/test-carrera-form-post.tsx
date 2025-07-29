@@ -7,9 +7,10 @@ import { postTestCarrera } from "../services/test-carrera-service";
 
 interface Props {
   onClose: () => void;
+  onLoad: () => void;
 }
 
-export const TestCarreraFormPost = ({ onClose }: Props) => {
+export const TestCarreraFormPost = ({ onClose, onLoad }: Props) => {
   const [aptitudes, setAptitudes] = useState<IAptitud[]>([]);
   const [tests, setTests] = useState<ITest[]>([]);
   const [carreras, setCarreras] = useState<ICarrera[]>([]);
@@ -60,6 +61,8 @@ export const TestCarreraFormPost = ({ onClose }: Props) => {
   const onPostCarrera = async (carrera_id: number) => {
     try {
       await postTestCarrera(testCodigo, carrera_id);
+      onClose();
+      onLoad();
     } catch (err) {
       console.log("Error:", err);
     }
@@ -72,12 +75,9 @@ export const TestCarreraFormPost = ({ onClose }: Props) => {
 
   useEffect(() => {
     loadCarreras();
-  }, [seleccionAptitudes]);
-
-  useEffect(() => {
     loadAptitudes();
     loadTests();
-  }, []);
+  }, [seleccionAptitudes]);
 
   return (
     <>
