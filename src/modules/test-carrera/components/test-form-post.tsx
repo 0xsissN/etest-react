@@ -106,7 +106,7 @@ const TestFormPost = ({ onClose, onLoad }: Props) => {
 
             <label htmlFor="curso">
               Curso:
-              <select {...register("cursoID")}>
+              <select {...register("cursoId")}>
                 <option value="">Seleccionar curso</option>
                 {cursos.map((c) => (
                   <option key={c.id} value={c.id.toString()}>

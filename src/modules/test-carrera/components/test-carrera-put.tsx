@@ -52,14 +52,12 @@ const TestCarreraPutForm = ({ data, onClose, onLoad }: Props) => {
   };
 
   const onPutTest: SubmitHandler<ITest> = async (data) => {
-    console.log(data);
-
     try {
       const testCarreraActualizado = {
         ...data,
         estado: data.estado === true || data.estado === "true",
       };
-
+      
       await putTest(testCarreraActualizado);
       onClose();
       onLoad();
@@ -74,6 +72,8 @@ const TestCarreraPutForm = ({ data, onClose, onLoad }: Props) => {
   ) => {
     try {
       await deleteTestCarrera(test_id, carrera_id);
+      onClose();
+      onLoad();
     } catch (err) {
       console.error(err);
     }
@@ -96,20 +96,15 @@ const TestCarreraPutForm = ({ data, onClose, onLoad }: Props) => {
         <form onSubmit={handleSubmit(onPutTest)}>
           <label htmlFor="edit-codigo">
             Código:
-            <input
-              defaultValue={data?.codigo}
-              {...register("codigo")}
-              disabled
-            />
+            <input value={data?.codigo} {...register("codigo")} disabled />
           </label>
 
           <label htmlFor="edit-estudiante">
             Estudiante:
-            <select
-              defaultValue={data?.nombreEstudiante}
-              {...register("estudianteCI")}
-            >
-              <option>{data?.nombreEstudiante}</option>
+            <select {...register("estudianteCI")}>
+              <option value={data?.estudianteCI}>
+                {data?.nombreEstudiante}
+              </option>
               {estudiantes.map((est) => (
                 <option key={est.ci} value={est.ci}>
                   {est.nombre} {est.apellidoPaterno} (CI: {est.ci})
@@ -120,8 +115,8 @@ const TestCarreraPutForm = ({ data, onClose, onLoad }: Props) => {
 
           <label htmlFor="edit-colegio">
             Colegio:
-            <select defaultValue={data?.colegio} {...register("colegioCodigo")}>
-              <option>{data?.colegio}</option>
+            <select {...register("colegioCodigo")}>
+              <option value={data?.colegioCodigo}>{data?.colegio}</option>
               {colegios.map((col) => (
                 <option key={col.codigo} value={col.codigo}>
                   {col.nombre} (Código: {col.codigo})
@@ -132,8 +127,8 @@ const TestCarreraPutForm = ({ data, onClose, onLoad }: Props) => {
 
           <label htmlFor="edit-curso">
             Curso:
-            <select defaultValue={data?.curso} {...register("cursoID")}>
-              <option>{data?.curso}</option>
+            <select {...register("cursoId")}>
+              <option value={data?.cursoId}>{data?.curso}</option>
               {cursos.map((c) => (
                 <option key={c.id} value={c.id.toString()}>
                   {c.nombre}
@@ -149,7 +144,7 @@ const TestCarreraPutForm = ({ data, onClose, onLoad }: Props) => {
               {...register("estado")}
             >
               <option value="true">Activo</option>
-              <option value="false">Inactivo</option>
+              <option value="false">Desactivado</option>
             </select>
           </label>
 

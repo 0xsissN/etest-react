@@ -23,7 +23,7 @@ export interface ITest {
   codigo: string;
   estudianteCI: string;
   colegioCodigo: string;
-  cursoID: string;
+  cursoId: string;
   nombreEstudiante: string;
   colegio: string;
   curso: string;
