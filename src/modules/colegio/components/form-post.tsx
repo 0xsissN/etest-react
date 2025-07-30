@@ -31,17 +31,17 @@ const ColegioPostForm = ({ onClose, onLoad }: Props) => {
         <form onSubmit={handleSubmit(onPostColegio)}>
           <label htmlFor="nombre">
             Nombre:
-            <input {...register("nombre")} />
+            <input {...register("nombre", { required: true, pattern: /^[A-Za-z]+$/i })} />
           </label>
 
           <label htmlFor="direccion">
             Dirección:
-            <input {...register("direccion")} />
+            <input {...register("direccion", { required: true, pattern: /^[A-Za-z]+$/i })} />
           </label>
 
           <label htmlFor="codigo">
             Código:
-            <input {...register("codigo")} />
+            <input {...register("codigo", { required: true })} />
           </label>
 
           <button className="boton-guardar" type="submit">

@@ -77,12 +77,12 @@ const TestFormPost = ({ onClose, onLoad }: Props) => {
           <form onSubmit={handleSubmit(onPostTest)}>
             <label htmlFor="codigo">
               Código:
-              <input {...register("codigo")} />
+              <input {...register("codigo", { required: true })} />
             </label>
 
             <label htmlFor="estudiante">
               Estudiante:
-              <select {...register("estudianteCI")}>
+              <select {...register("estudianteCI", { required: true })}>
                 <option value="">Seleccionar estudiante</option>
                 {estudiantes.map((est) => (
                   <option key={est.ci} value={est.ci}>
@@ -94,7 +94,7 @@ const TestFormPost = ({ onClose, onLoad }: Props) => {
 
             <label htmlFor="colegio">
               Colegio:
-              <select {...register("colegioCodigo")}>
+              <select {...register("colegioCodigo", { required: true })}>
                 <option value="">Seleccionar colegio</option>
                 {colegios.map((col) => (
                   <option key={col.codigo} value={col.codigo}>
@@ -106,7 +106,7 @@ const TestFormPost = ({ onClose, onLoad }: Props) => {
 
             <label htmlFor="curso">
               Curso:
-              <select {...register("cursoId")}>
+              <select {...register("cursoId", { required: true })}>
                 <option value="">Seleccionar curso</option>
                 {cursos.map((c) => (
                   <option key={c.id} value={c.id.toString()}>

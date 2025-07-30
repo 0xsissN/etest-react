@@ -37,19 +37,22 @@ const EstudiantePutForm = ({ data, onClose, onLoad }: Props) => {
         <form onSubmit={handleSubmit(onPutEstudiante)}>
           <label htmlFor="edit-ci">
             CI:
-            <input defaultValue={data?.ci} {...register("ci")} />
+            <input defaultValue={data?.ci} {...register("ci")} disabled />
           </label>
 
           <label htmlFor="edit-nombre">
             Nombre:
-            <input defaultValue={data?.nombre} {...register("nombre")} />
+            <input
+              defaultValue={data?.nombre}
+              {...register("nombre", { pattern: /^[A-Za-z]+$/i })}
+            />
           </label>
 
           <label htmlFor="edit-apellidoPaterno">
             Apellido Paterno:
             <input
               defaultValue={data?.apellidoPaterno}
-              {...register("apellidoPaterno")}
+              {...register("apellidoPaterno", { pattern: /^[A-Za-z]+$/i })}
             />
           </label>
 
@@ -57,7 +60,7 @@ const EstudiantePutForm = ({ data, onClose, onLoad }: Props) => {
             Apellido Materno:
             <input
               defaultValue={data?.apellidoMaterno}
-              {...register("apellidoMaterno")}
+              {...register("apellidoMaterno", { pattern: /^[A-Za-z]+$/i })}
             />
           </label>
 

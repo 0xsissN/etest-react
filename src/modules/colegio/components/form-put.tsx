@@ -5,7 +5,7 @@ import { putColegio } from "../services/colegio-service";
 interface Props {
   data: IColegio | null;
   onClose: () => void;
-  onLoad: () => void
+  onLoad: () => void;
 }
 
 const ColegioPutForm = ({ data, onClose, onLoad }: Props) => {
@@ -35,19 +35,29 @@ const ColegioPutForm = ({ data, onClose, onLoad }: Props) => {
         </button>
 
         <form onSubmit={handleSubmit(onPutColegio)}>
+          <label htmlFor="edit-codigo">
+            Código:
+            <input
+              defaultValue={data?.codigo}
+              {...register("codigo")}
+              disabled
+            />
+          </label>
+
           <label htmlFor="edit-nombre">
             Nombre:
-            <input defaultValue={data?.nombre} {...register("nombre")} />
+            <input
+              defaultValue={data?.nombre}
+              {...register("nombre", { pattern: /^[A-Za-z]+$/i })}
+            />
           </label>
 
           <label htmlFor="edit-direccion">
             Dirección:
-            <input defaultValue={data?.direccion} {...register("direccion")} />
-          </label>
-
-          <label htmlFor="edit-codigo">
-            Código:
-            <input defaultValue={data?.codigo} {...register("codigo")} />
+            <input
+              defaultValue={data?.direccion}
+              {...register("direccion", { pattern: /^[A-Za-z]+$/i })}
+            />
           </label>
 
           <label htmlFor="edit-estado">

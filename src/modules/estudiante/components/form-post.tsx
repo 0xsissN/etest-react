@@ -31,27 +31,42 @@ const EstudiantePostForm = ({ onClose, onLoad }: Props) => {
         <form onSubmit={handleSubmit(onPostEstudiante)}>
           <label htmlFor="ci">
             CI:
-            <input {...register("ci")} />
+            <input {...register("ci", { required: true })} />
           </label>
 
           <label htmlFor="nombre">
             Nombre:
-            <input {...register("nombre")} />
+            <input
+              {...register("nombre", {
+                required: true,
+                pattern: /^[A-Za-z]+$/i,
+              })}
+            />
           </label>
 
           <label htmlFor="apellidoPaterno">
             Apellido Paterno:
-            <input {...register("apellidoPaterno")} />
+            <input
+              {...register("apellidoPaterno", {
+                required: true,
+                pattern: /^[A-Za-z]+$/i,
+              })}
+            />
           </label>
 
           <label htmlFor="apellidoMaterno">
             Apellido Materno:
-            <input {...register("apellidoMaterno")} />
+            <input
+              {...register("apellidoMaterno", { pattern: /^[A-Za-z]+$/i })}
+            />
           </label>
 
           <label htmlFor="fechaNacimiento">
             Fecha de Nacimiento:
-            <input {...register("fechaNacimiento")} type="date" />
+            <input
+              {...register("fechaNacimiento", { required: true })}
+              type="date"
+            />
           </label>
 
           <button className="boton-guardar" type="submit">
