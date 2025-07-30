@@ -18,7 +18,7 @@ interface Props {
   onLoad: () => void;
 }
 
-export const TestCarreraPutForm = ({ data, onClose, onLoad }: Props) => {
+const TestCarreraPutForm = ({ data, onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<ITest>();
   const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
   const [colegios, setColegios] = useState<IColegio[]>([]);
@@ -192,3 +192,4 @@ export const TestCarreraPutForm = ({ data, onClose, onLoad }: Props) => {
     </div>
   );
 };
+export default TestCarreraPutForm;

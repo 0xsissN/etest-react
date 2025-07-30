@@ -4,10 +4,10 @@ import { postEstudiante } from "../services/estudiante-service";
 
 interface Props {
   onClose: () => void;
-  onLoad: () => void
+  onLoad: () => void;
 }
 
-export const EstudiantePostForm = ({ onClose, onLoad }: Props) => {
+const EstudiantePostForm = ({ onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<IEstudiante>();
 
   const onPostEstudiante: SubmitHandler<IEstudiante> = async (data) => {
@@ -62,3 +62,5 @@ export const EstudiantePostForm = ({ onClose, onLoad }: Props) => {
     </div>
   );
 };
+
+export default EstudiantePostForm;

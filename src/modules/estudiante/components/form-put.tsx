@@ -8,7 +8,7 @@ interface Props {
   onLoad: () => void;
 }
 
-export const EstudiantePutForm = ({ data, onClose, onLoad }: Props) => {
+const EstudiantePutForm = ({ data, onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<IEstudiante>();
 
   const onPutEstudiante: SubmitHandler<IEstudiante> = async (data) => {
@@ -89,3 +89,4 @@ export const EstudiantePutForm = ({ data, onClose, onLoad }: Props) => {
     </div>
   );
 };
+export default EstudiantePutForm;

@@ -4,10 +4,10 @@ import { postColegio } from "../services/colegio-service";
 
 interface Props {
   onClose: () => void;
-  onLoad: () => void
+  onLoad: () => void;
 }
 
-export const ColegioPostForm = ({ onClose, onLoad }: Props) => {
+const ColegioPostForm = ({ onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<IColegio>();
 
   const onPostColegio: SubmitHandler<IColegio> = async (data) => {
@@ -52,3 +52,5 @@ export const ColegioPostForm = ({ onClose, onLoad }: Props) => {
     </div>
   );
 };
+
+export default ColegioPostForm;

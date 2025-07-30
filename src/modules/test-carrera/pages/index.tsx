@@ -1,18 +1,11 @@
 import { useAuthStore } from "../../../store/useAuthStore";
-import { Navigate, useNavigate } from "react-router-dom";
-import { TestCarreraList } from "../components/list";
+import TestCarreraList from "../components/list";
 
-export const TestCarreraPage = () => {
-  const { isAuthenticated, logout } = useAuthStore();
-  const navigate = useNavigate();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/" />;
-  }
+const TestCarreraPage = () => {
+  const { logout } = useAuthStore();
 
   const handleLogout = () => {
     logout();
-    navigate("/");
   };
 
   return (
@@ -27,3 +20,5 @@ export const TestCarreraPage = () => {
     </div>
   );
 };
+
+export default TestCarreraPage;

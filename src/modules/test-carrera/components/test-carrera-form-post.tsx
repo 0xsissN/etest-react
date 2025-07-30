@@ -10,7 +10,7 @@ interface Props {
   onLoad: () => void;
 }
 
-export const TestCarreraFormPost = ({ onClose, onLoad }: Props) => {
+const TestCarreraFormPost = ({ onClose, onLoad }: Props) => {
   const [aptitudes, setAptitudes] = useState<IAptitud[]>([]);
   const [tests, setTests] = useState<ITest[]>([]);
   const [carreras, setCarreras] = useState<ICarrera[]>([]);
@@ -142,3 +142,4 @@ export const TestCarreraFormPost = ({ onClose, onLoad }: Props) => {
     </>
   );
 };
+export default TestCarreraFormPost;

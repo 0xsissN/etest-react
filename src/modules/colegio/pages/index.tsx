@@ -1,18 +1,11 @@
-import { Navigate, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store/useAuthStore";
-import { ColegioList } from "../components/list";
+import ColegioList from "../components/list";
 
-export const ColegioPage = () => {
-  const { isAuthenticated, logout } = useAuthStore();
-  const navigate = useNavigate();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/" />;
-  }
+const ColegioPage = () => {
+  const { logout } = useAuthStore();
 
   const handleLogout = () => {
     logout();
-    navigate("/");
   };
 
   return (
@@ -27,3 +20,5 @@ export const ColegioPage = () => {
     </div>
   );
 };
+
+export default ColegioPage;

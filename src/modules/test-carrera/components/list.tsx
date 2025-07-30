@@ -3,12 +3,12 @@ import type { ITest } from "../../../types/models";
 import { deleteTest, getTest } from "../services/test-service";
 import { getAptitudByID } from "../services/aptitud-service";
 import { getCarreraByID } from "../services/test-carrera-service";
-import { TestCarreraPutForm } from "./test-carrera-put";
 import { useAuthStore } from "../../../store/useAuthStore";
-import { TestFormPost } from "./test-form-post";
-import { TestCarreraFormPost } from "./test-carrera-form-post";
+import TestCarreraPutForm from "./test-carrera-put";
+import TestFormPost from "./test-form-post";
+import TestCarreraFormPost from "./test-carrera-form-post";
 
-export const TestCarreraList = () => {
+const TestCarreraList = () => {
   const [tests, setTests] = useState<ITest[]>([]);
   const [test, setTest] = useState<ITest | null>(null);
   const { rol } = useAuthStore();
@@ -140,7 +140,7 @@ export const TestCarreraList = () => {
           onLoad={loadTests}
         />
       )}
-      
+
       {tOpen && (
         <TestFormPost onClose={() => setTOpen(false)} onLoad={loadTests} />
       )}
@@ -154,3 +154,5 @@ export const TestCarreraList = () => {
     </>
   );
 };
+
+export default TestCarreraList;

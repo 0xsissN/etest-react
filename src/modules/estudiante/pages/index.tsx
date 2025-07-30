@@ -1,18 +1,11 @@
 import { useAuthStore } from "../../../store/useAuthStore";
-import { Navigate, useNavigate } from "react-router-dom";
-import { EstudianteList } from "../components/list";
+import EstudianteList from "../components/list";
 
-export const EstudiantePage = () => {
-  const { isAuthenticated, logout } = useAuthStore();
-  const navigate = useNavigate();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/" />;
-  }
-
+const EstudiantePage = () => {
+  const { logout } = useAuthStore();
+  
   const handleLogout = () => {
     logout();
-    navigate("/");
   };
 
   return (
@@ -27,3 +20,5 @@ export const EstudiantePage = () => {
     </div>
   );
 };
+
+export default EstudiantePage;

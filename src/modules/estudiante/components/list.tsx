@@ -4,14 +4,12 @@ import {
   deleteEstudiante,
   getEstudiante,
 } from "../services/estudiante-service";
-import { EstudiantePutForm } from "./form-put";
-import { useAuthStore } from "../../../store/useAuthStore";
-import { EstudiantePostForm } from "./form-post";
+import EstudiantePutForm from "./form-put";
+import EstudiantePostForm from "./form-post";
 
-export const EstudianteList = () => {
+const EstudianteList = () => {
   const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
   const [estudiante, setEstudiante] = useState<IEstudiante | null>(null);
-  const { rol } = useAuthStore();
 
   const [open, setOpen] = useState(false);
   const [registroOpen, setRegistroOpen] = useState(false);
@@ -50,16 +48,14 @@ export const EstudianteList = () => {
             <th>Apellido Materno</th>
             <th>Fecha Nacimiento</th>
             <th>Estado</th>
-            {rol === "Admin" && (
-              <th colSpan={2}>
-                <button
-                  className="boton-registro"
-                  onClick={() => setRegistroOpen(true)}
-                >
-                  Agregar Estudiante
-                </button>
-              </th>
-            )}
+            <th colSpan={2}>
+              <button
+                className="boton-registro"
+                onClick={() => setRegistroOpen(true)}
+              >
+                Agregar Estudiante
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -72,29 +68,27 @@ export const EstudianteList = () => {
               <td>{estudiante.apellidoMaterno}</td>
               <td>{estudiante.fechaNacimiento}</td>
               <td>{estudiante.estado ? "Activo" : "Desactivado"}</td>
-              {rol === "Admin" && (
-                <>
-                  <td>
-                    <button
-                      className="boton-actualizado"
-                      onClick={() => handleDeleteEstudiante(estudiante.ci)}
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="boton-actualizado"
-                      onClick={() => {
-                        setOpen(true);
-                        setEstudiante(estudiante);
-                      }}
-                    >
-                      Editar
-                    </button>
-                  </td>
-                </>
-              )}
+              <>
+                <td>
+                  <button
+                    className="boton-actualizado"
+                    onClick={() => handleDeleteEstudiante(estudiante.ci)}
+                  >
+                    Eliminar
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="boton-actualizado"
+                    onClick={() => {
+                      setOpen(true);
+                      setEstudiante(estudiante);
+                    }}
+                  >
+                    Editar
+                  </button>
+                </td>
+              </>
             </tr>
           ))}
         </tbody>
@@ -117,3 +111,4 @@ export const EstudianteList = () => {
     </>
   );
 };
+export default EstudianteList;

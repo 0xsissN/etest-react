@@ -16,7 +16,7 @@ interface Props {
   onLoad: () => void;
 }
 
-export const TestFormPost = ({ onClose, onLoad }: Props) => {
+const TestFormPost = ({ onClose, onLoad }: Props) => {
   const { register, handleSubmit } = useForm<ITest>();
   const [estudiantes, setEstudiantes] = useState<IEstudiante[]>([]);
   const [colegios, setColegios] = useState<IColegio[]>([]);
@@ -125,3 +125,4 @@ export const TestFormPost = ({ onClose, onLoad }: Props) => {
     </>
   );
 };
+export default TestFormPost;

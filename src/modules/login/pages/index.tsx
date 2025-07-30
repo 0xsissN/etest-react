@@ -1,10 +1,17 @@
-import { LoginPostForm } from "../components/form-post";
+import LoginPostForm from "../components/form-post";
 
-export const LoginPage = () => {
+const LoginPage = () => {
   return (
-    <div className="contenedor">
+    <div
+      className="contenedor"
+      style={{
+        minHeight: "90vh",
+      }}
+    >
       <h1>Login</h1>
       <LoginPostForm />
     </div>
   );
 };
+
+export default LoginPage;
