@@ -46,18 +46,12 @@ const ColegioPutForm = ({ data, onClose, onLoad }: Props) => {
 
           <label htmlFor="edit-nombre">
             Nombre:
-            <input
-              defaultValue={data?.nombre}
-              {...register("nombre", { pattern: /^[A-Za-z]+$/i })}
-            />
+            <input defaultValue={data?.nombre} {...register("nombre")} />
           </label>
 
           <label htmlFor="edit-direccion">
             Dirección:
-            <input
-              defaultValue={data?.direccion}
-              {...register("direccion", { pattern: /^[A-Za-z]+$/i })}
-            />
+            <input defaultValue={data?.direccion} {...register("direccion")} />
           </label>
 
           <label htmlFor="edit-estado">

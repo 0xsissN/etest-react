@@ -36,7 +36,7 @@ const ColegioPostForm = ({ onClose, onLoad }: Props) => {
 
           <label htmlFor="direccion">
             Dirección:
-            <input {...register("direccion", { required: true, pattern: /^[A-Za-z]+$/i })} />
+            <input {...register("direccion", { required: true })} />
           </label>
 
           <label htmlFor="codigo">
